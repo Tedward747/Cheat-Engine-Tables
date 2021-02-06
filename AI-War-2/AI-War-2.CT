@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="31">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>39</ID>
+      <Description>"Info --&gt;"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{
+  Game   : AIWar2
+  Version: 2.715
+  Author : Ted
+  GitHub : https://github.com/Tedward747/Cheat-Engine-Tables/tree/master/AI-War-2
+
+  Important:
+    For any of the scripts that say "Pause before toggling this one", PAUSE YOUR GAME.
+    If you do not it may crash on you. You've been warned.
+    The rest can be toggled on and off without pausing.
+
+    If something doesn't seem to be working, check my GitHub for updates.
+    If you're on the most recent version, open an issue.
+
+  Options:
+    Resources:
+      Lock current metal to whatever your current max storage amount is
+      Lock science points to 15,000
+      Lock hacking points to 300
+      Lock max energy to 50,000,000
+    Ships &amp; Structures:
+      Lock hull for all your ships and structures to 10,000,000
+      Lock shields for all your ships and structures to 10,000,000
+      Increase unit and structure cap by 10x, for example if a transport can carry 30 v-wings now it can carry 300.
+        Also works for some planetary structures, for example turrets.
+    Other:
+      Lock AIP so it doesn't go up or down as you play.
+}
+
+
+ 
+[ENABLE]
+[DISABLE]
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>7</ID>
+      <Description>"Resources (Pause before toggling this one)"</Description>
+      <Options moDeactivateChildrenAsWell="1"/>
+      <LastState/>
+      <Color>000080</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript Async="1">[ENABLE]
+
+aobscan(resources,48 63 90 B8 01 00 00 48 8B 4D) // should be unique
+alloc(resources_newmem,$1000,resources)
+
+label(resources_code)
+label(resources_return)
+
+label(resources_metal)
+registersymbol(resources_metal)
+label(resources_science)
+registersymbol(resources_science)
+label(resources_hacking)
+registersymbol(resources_hacking)
+
+resources_newmem:
+  cmp [resources_metal],1
+  jne resources_skipMetal
+  push rcx
+  mov rcx,[rax+000001B8]
+  push rax
+  push rdx
+  mov rax,#1000
+  mov rdx,rcx
+  mul rdx //multiply max metal by 1000 so it matches stored value type
+  mov rcx,rax
+  pop rdx
+  pop rax
+  mov [rax+000001B0],rcx //set stored to equal max metal
+  pop rcx
+resources_skipMetal:
+  cmp [resources_science],1
+  jne resources_skipScience
+  mov [rax+000001E0],#15000000 //15k stored science
+resources_skipScience:
+  cmp [resources_hacking],1
+  jne resources_skipHacking
+  mov [rax+000001E8],#300000 //300 stored hacking
+resources_skipHacking:
+
+resources_code:
+  movsxd  rdx,dword ptr [rax+000001B8]
+  jmp resources_return
+
+resources_metal:
+dd 0
+resources_science:
+dd 0
+resources_hacking:
+dd 0
+
+resources:
+  jmp resources_newmem
+  nop 2
+resources_return:
+registersymbol(resources)
+
+aobscan(resources_energy,89 88 D0 01 00 00 48 8B 85 28) // should be unique
+alloc(resources_energy_newmem,$1000,resources_energy)
+
+label(resources_energy_code)
+label(resources_energy_return)
+
+label(resources_energy_active)
+registersymbol(resources_energy_active)
+
+resources_energy_newmem:
+  cmp [resources_energy_active],1
+  jne resources_energy_code
+  mov [rax+000001D0],#50000000 //50m energy available
+  jmp resources_energy_return
+
+resources_energy_code:
+  mov [rax+000001D0],ecx
+  jmp resources_energy_return
+
+resources_energy_active:
+dd 0
+
+resources_energy:
+  jmp resources_energy_newmem
+  nop
+resources_energy_return:
+registersymbol(resources_energy)
+
+[DISABLE]
+
+resources:
+  db 48 63 90 B8 01 00 00
+
+unregistersymbol(resources)
+unregistersymbol(resources_metal)
+unregistersymbol(resources_science)
+unregistersymbol(resources_hacking)
+dealloc(resources_newmem)
+
+resources_energy:
+  db 89 88 D0 01 00 00
+
+unregistersymbol(resources_energy_active)
+unregistersymbol(resources_energy)
+dealloc(resources_energy_newmem)
+
+{
+// resources
+// DisplayClass195_2:DoFactionStepLogic.b_2+212
+
+2410EEBCD16: C7 40 20 0C 17 00 00           -  mov [rax+20],0000170C
+2410EEBCD1D: 48 8B 47 10                    -  mov rax,[rdi+10]
+2410EEBCD21: 48 8B 40 10                    -  mov rax,[rax+10]
+2410EEBCD25: 48 8B 40 10                    -  mov rax,[rax+10]
+2410EEBCD29: 48 05 B0 01 00 00              -  add rax,000001B0
+2410EEBCD2F: 48 8B 00                       -  mov rax,[rax]
+2410EEBCD32: 48 89 45 B0                    -  mov [rbp-50],rax
+2410EEBCD36: 48 8B 47 10                    -  mov rax,[rdi+10]
+2410EEBCD3A: 48 8B 40 10                    -  mov rax,[rax+10]
+2410EEBCD3E: 48 8B 40 10                    -  mov rax,[rax+10]
+// ---------- INJECTING HERE ----------
+2410EEBCD42: 48 63 90 B8 01 00 00           -  movsxd  rdx,dword ptr [rax+000001B8]
+// ---------- DONE INJECTING  ----------
+2410EEBCD49: 48 8B 4D B0                    -  mov rcx,[rbp-50]
+2410EEBCD4D: 90                             -  nop
+2410EEBCD4E: 49 BB 20 11 80 28 40 02 00 00  -  mov r11,0000024028801120
+2410EEBCD58: 41 FF D3                       -  call r11
+2410EEBCD5B: 48 8B C8                       -  mov rcx,rax
+2410EEBCD5E: 48 0F B6 C1                    -  movzx rax,cl
+2410EEBCD62: 40 88 8D 70 FF FF FF           -  mov [rbp-00000090],cl
+2410EEBCD69: 85 C0                          -  test eax,eax
+2410EEBCD6B: 0F 84 5A 00 00 00              -  je 2410EEBCDCB
+2410EEBCD71: 48 8B 47 10                    -  mov rax,[rdi+10]
+}
+
+{
+// resources_energy
+// Arcen.AIW2.Core:Faction:DoFactionStepLogic+b15
+
+2410EEAC0E5: 83 38 00                       -  cmp dword ptr [rax],00
+2410EEAC0E8: 48 8D 64 24 00                 -  lea rsp,[rsp+00]
+2410EEAC0ED: 90                             -  nop
+2410EEAC0EE: 49 BB 40 DE EB 0E 41 02 00 00  -  mov r11,000002410EEBDE40
+2410EEAC0F8: 41 FF D3                       -  call r11
+2410EEAC0FB: 49 8B 45 10                    -  mov rax,[r13+10]
+2410EEAC0FF: 48 8B 40 10                    -  mov rax,[rax+10]
+2410EEAC103: C7 40 20 44 2F 00 00           -  mov [rax+20],00002F44
+2410EEAC10A: 48 8B 85 28 FE FF FF           -  mov rax,[rbp-000001D8]
+2410EEAC111: 49 63 4D 20                    -  movsxd  rcx,dword ptr [r13+20]
+// ---------- INJECTING HERE ----------
+2410EEAC115: 89 88 D0 01 00 00              -  mov [rax+000001D0],ecx
+// ---------- DONE INJECTING  ----------
+2410EEAC11B: 48 8B 85 28 FE FF FF           -  mov rax,[rbp-000001D8]
+2410EEAC122: 49 63 4D 24                    -  movsxd  rcx,dword ptr [r13+24]
+2410EEAC126: 89 88 D4 01 00 00              -  mov [rax+000001D4],ecx
+2410EEAC12C: 49 8B 45 10                    -  mov rax,[r13+10]
+2410EEAC130: 48 8B 40 10                    -  mov rax,[rax+10]
+2410EEAC134: C7 40 20 A8 2F 00 00           -  mov [rax+20],00002FA8
+2410EEAC13B: 48 8B 9D 28 FE FF FF           -  mov rbx,[rbp-000001D8]
+2410EEAC142: 45 33 FF                       -  xor r15d,r15d
+2410EEAC145: 48 63 83 D0 01 00 00           -  movsxd  rax,dword ptr [rbx+000001D0]
+2410EEAC14C: 48 63 8B D4 01 00 00           -  movsxd  rcx,dword ptr [rbx+000001D4]
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>25</ID>
+          <Description>"Lock Metal (to max)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+resources_metal:
+dd 1
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+resources_metal:
+dd 0
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>26</ID>
+          <Description>"Lock Science (15k)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+resources_science:
+dd 1
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+resources_science:
+dd 0
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>27</ID>
+          <Description>"Lock Hacking (300)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+resources_hacking:
+dd 1
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+resources_hacking:
+dd 0
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>30</ID>
+          <Description>"Lock Energy (50m)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+resources_energy_active:
+dd 1
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+resources_energy_active:
+dd 0
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>21</ID>
+      <Description>"Ships &amp; Structures (Pause before toggling this one)"</Description>
+      <Options moDeactivateChildrenAsWell="1"/>
+      <LastState/>
+      <Color>000080</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript Async="1">[ENABLE]
+
+aobscan(ship_hull,89 86 A0 00 00 00 48 8B 46 10) // should be unique
+alloc(ship_hull_newmem,$1000,ship_hull)
+
+label(ship_hull_code)
+label(ship_hull_return)
+
+label(ship_hull_active)
+registersymbol(ship_hull_active)
+
+ship_hull_newmem:
+  cmp [ship_hull_active],1
+  jne ship_hull_code
+  mov [rsi+000000A0],#10000000 //hull
+  jmp ship_hull_return
+
+ship_hull_code:
+  mov [rsi+000000A0],eax
+  jmp ship_hull_return
+
+ship_hull_active:
+dd 0
+
+ship_hull:
+  jmp ship_hull_newmem
+  nop
+ship_hull_return:
+registersymbol(ship_hull)
+
+aobscan(ship_shields,89 86 A4 00 00 00 48 8B 46) // should be unique
+alloc(ship_shields_newmem,$1000,ship_shields)
+
+label(ship_shields_code)
+label(ship_shields_return)
+
+label(ship_shields_active)
+registersymbol(ship_shields_active)
+
+ship_shields_newmem:
+  cmp [ship_shields_active],1
+  jne ship_shields_code
+  mov [rsi+000000A4],#10000000 //shields
+  jmp ship_shields_return
+
+ship_shields_code:
+  mov [rsi+000000A4],eax
+  jmp ship_shields_return
+
+ship_shields_active:
+dd 0
+
+ship_shields:
+  jmp ship_shields_newmem
+  nop
+ship_shields_return:
+registersymbol(ship_shields)
+
+aobscan(ship_squad_cap,14 49 63 44 24 54) // should be unique
+alloc(ship_squad_cap_newmem,$1000,ship_squad_cap)
+
+label(ship_squad_cap_code)
+label(ship_squad_cap_return)
+
+label(ship_squad_cap_active)
+registersymbol(ship_squad_cap_active)
+
+ship_squad_cap_newmem:
+  cmp [ship_squad_cap_active],1
+  jne ship_squad_cap_code
+  cmp [r12+70],0 //check if unit is allowed to increase cap
+  jne ship_squad_cap_code
+  push eax
+  push edx
+  mov eax,#10
+  mov edx,[r12+54]
+  mul edx
+  mov [r12+5C],eax
+  mov [r12+68],eax
+  pop edx
+  pop eax
+  jmp ship_squad_cap_return
+
+ship_squad_cap_code:
+  movsxd  rax,dword ptr [r12+54]
+  mov [r12+5C],eax
+  movsxd  rax,dword ptr [r12+54]
+  jmp ship_squad_cap_return
+
+ship_squad_cap_active:
+dd 0
+
+ship_squad_cap+01:
+  jmp ship_squad_cap_newmem
+  db 90 90 90 90 90
+  db 90 90 90 90 90
+  db 90 90 90 90 90
+
+ship_squad_cap_return:
+registersymbol(ship_squad_cap)
+
+[DISABLE]
+
+ship_hull:
+  db 89 86 A0 00 00 00
+
+unregistersymbol(ship_hull_active)
+unregistersymbol(ship_hull)
+dealloc(ship_hull_newmem)
+
+ship_shields:
+  db 89 86 A4 00 00 00
+
+unregistersymbol(ship_shields_active)
+unregistersymbol(ship_shields)
+dealloc(ship_shields_newmem)
+
+ship_squad_cap+01:
+  db 49 63 44 24 54 41 89 44 24 5C 49 63 44 24 54 41 89 44 24 68
+
+unregistersymbol(ship_squad_cap_active)
+unregistersymbol(ship_squad_cap)
+dealloc(ship_squad_cap_newmem)
+
+{
+// ship_hull
+// Membership:GetMaxHullPoints_PlayerFleetsOnly+83
+
+240C3FD92BA: 74 1F                          -  je 240C3FD92DB
+240C3FD92BC: 0F B6 56 58                    -  movzx edx,byte ptr [rsi+58]
+240C3FD92C0: 44 0F B6 46 58                 -  movzx r8d,byte ptr [rsi+58]
+240C3FD92C5: 48 8B CE                       -  mov rcx,rsi
+240C3FD92C8: 48 8D 64 24 00                 -  lea rsp,[rsp+00]
+240C3FD92CD: 90                             -  nop
+240C3FD92CE: 49 BB D0 93 FD C3 40 02 00 00  -  mov r11,00000240C3FD93D0
+240C3FD92D8: 41 FF D3                       -  call r11
+240C3FD92DB: 48 8B 46 20                    -  mov rax,[rsi+20]
+240C3FD92DF: 48 63 40 50                    -  movsxd  rax,dword ptr [rax+50]
+// ---------- INJECTING HERE ----------
+240C3FD92E3: 89 86 A0 00 00 00              -  mov [rsi+000000A0],eax
+// ---------- DONE INJECTING  ----------
+240C3FD92E9: 48 8B 46 10                    -  mov rax,[rsi+10]
+240C3FD92ED: 48 85 C0                       -  test rax,rax
+240C3FD92F0: 0F 84 42 00 00 00              -  je 240C3FD9338
+240C3FD92F6: 48 8B 46 10                    -  mov rax,[rsi+10]
+240C3FD92FA: 48 05 90 00 00 00              -  add rax,00000090
+240C3FD9300: 48 8B 00                       -  mov rax,[rax]
+240C3FD9303: 48 89 45 D8                    -  mov [rbp-28],rax
+240C3FD9307: 48 B8 00 92 F2 06 40 02 00 00  -  mov rax,0000024006F29200
+240C3FD9311: 48 8B 00                       -  mov rax,[rax]
+240C3FD9314: 48 89 45 E0                    -  mov [rbp-20],rax
+}
+
+{
+// ship_shields
+// Membership:GetMaxShieldPoints_PlayerFleetsOnly+83
+
+2410B007A5A: 74 1F                          -  je 2410B007A7B
+2410B007A5C: 0F B6 56 58                    -  movzx edx,byte ptr [rsi+58]
+2410B007A60: 44 0F B6 46 58                 -  movzx r8d,byte ptr [rsi+58]
+2410B007A65: 48 8B CE                       -  mov rcx,rsi
+2410B007A68: 48 8D 64 24 00                 -  lea rsp,[rsp+00]
+2410B007A6D: 90                             -  nop
+2410B007A6E: 49 BB B9 93 FD C3 40 02 00 00  -  mov r11,00000240C3FD93B9
+2410B007A78: 41 FF D3                       -  call r11
+2410B007A7B: 48 8B 46 20                    -  mov rax,[rsi+20]
+2410B007A7F: 48 63 40 58                    -  movsxd  rax,dword ptr [rax+58]
+// ---------- INJECTING HERE ----------
+2410B007A83: 89 86 A4 00 00 00              -  mov [rsi+000000A4],eax
+// ---------- DONE INJECTING  ----------
+2410B007A89: 48 8B 46 10                    -  mov rax,[rsi+10]
+2410B007A8D: 48 85 C0                       -  test rax,rax
+2410B007A90: 0F 84 42 00 00 00              -  je 2410B007AD8
+2410B007A96: 48 8B 46 10                    -  mov rax,[rsi+10]
+2410B007A9A: 48 05 98 00 00 00              -  add rax,00000098
+2410B007AA0: 48 8B 00                       -  mov rax,[rax]
+2410B007AA3: 48 89 45 D8                    -  mov [rbp-28],rax
+2410B007AA7: 48 B8 00 92 F2 06 40 02 00 00  -  mov rax,0000024006F29200
+2410B007AB1: 48 8B 00                       -  mov rax,[rax]
+2410B007AB4: 48 89 45 E0                    -  mov [rbp-20],rax
+}
+
+{
+// ship_squad_cap
+// Membership:PerFrame_CalculateEffectiveFleetData_P1+4A3
+
+2410EEA6C25: 49 8B 44 24 18                 -  mov rax,[r12+18]
+2410EEA6C2A: 48 8B 80 30 02 00 00           -  mov rax,[rax+00000230]
+2410EEA6C31: 0F B6 80 98 00 00 00           -  movzx eax,byte ptr [rax+00000098]
+2410EEA6C38: 40 88 85 A8 FD FF FF           -  mov [rbp-00000258],al
+2410EEA6C3F: 49 8B CC                       -  mov rcx,r12
+2410EEA6C42: 0F B6 95 A8 FD FF FF           -  movzx edx,byte ptr [rbp-00000258]
+2410EEA6C49: 44 0F B6 85 A8 FD FF FF        -  movzx r8d,byte ptr [rbp-00000258]
+2410EEA6C51: 48 8D 64 24 00                 -  lea rsp,[rsp+00]
+2410EEA6C56: 49 BB B9 93 FD C3 40 02 00 00  -  mov r11,00000240C3FD93B9
+2410EEA6C60: 41 FF D3                       -  call r11
+// ---------- INJECTING HERE ----------
+2410EEA6C63: 49 63 44 24 54                 -  movsxd  rax,dword ptr [r12+54]
+// ---------- DONE INJECTING  ----------
+2410EEA6C68: 41 89 44 24 5C                 -  mov [r12+5C],eax
+2410EEA6C6D: 49 63 44 24 54                 -  movsxd  rax,dword ptr [r12+54]
+2410EEA6C72: 41 89 44 24 68                 -  mov [r12+68],eax
+2410EEA6C77: E9 C4 02 00 00                 -  jmp 2410EEA6F40
+2410EEA6C7C: 49 8B 44 24 10                 -  mov rax,[r12+10]
+2410EEA6C81: 48 8B C8                       -  mov rcx,rax
+2410EEA6C84: 83 39 00                       -  cmp dword ptr [rcx],00
+2410EEA6C87: 0F B6 40 64                    -  movzx eax,byte ptr [rax+64]
+2410EEA6C8B: 48 0F B6 C0                    -  movzx rax,al
+2410EEA6C8F: 83 F8 07                       -  cmp eax,07
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>28</ID>
+          <Description>"Total Hull (10m)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+ship_hull_active:
+dd 1
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+ship_hull_active:
+dd 0
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>29</ID>
+          <Description>"Total Shields (10m)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+ship_shields_active:
+dd 1
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+ship_shields_active:
+dd 0
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>37</ID>
+          <Description>"Increase Unit &amp; Structure Cap (10x)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+ship_squad_cap_active:
+dd 1
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+ship_squad_cap_active:
+dd 0
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"Other (Pause before toggling this one)"</Description>
+      <LastState/>
+      <Color>000080</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript Async="1">[ENABLE]
+
+aobscan(lock_aip,55 48 8B EC 48 81 EC E0 00 00 00 48 89 5D E0) // should be unique
+alloc(lock_aip_newmem,$1000,lock_aip)
+
+label(lock_aip_code)
+label(lock_aip_return)
+
+label(lock_aip_active)
+registersymbol(lock_aip_active)
+
+lock_aip_newmem:
+  cmp [lock_aip_active],1
+  jne lock_aip_code
+  ret
+
+lock_aip_code:
+  push rbp
+  mov rbp,rsp
+  sub rsp,000000E0
+  jmp lock_aip_return
+
+lock_aip_active:
+dd 0
+
+lock_aip:
+  jmp lock_aip_newmem
+  nop 6
+lock_aip_return:
+registersymbol(lock_aip)
+
+aobscan(lock_aip_two,55 48 8B EC 48 81 EC B0 00 00 00 48 89 5D C8 48 89 75 D0 48 89 7D D8 4C 89 65 E0 4C 89 6D E8 4C 89 75 F0 4C 89 7D F8 48 89 4D B0 48) // should be unique
+alloc(lock_aip_two_newmem,$1000,lock_aip_two)
+
+label(lock_aip_two_code)
+label(lock_aip_two_return)
+
+label(lock_aip_two_active)
+registersymbol(lock_aip_two_active)
+
+lock_aip_two_newmem:
+  cmp [lock_aip_two_active],1
+  jne lock_aip_two_code
+  ret
+
+lock_aip_two_code:
+  push rbp
+  mov rbp,rsp
+  sub rsp,000000B0
+  jmp lock_aip_two_return
+
+lock_aip_two_active:
+dd 0
+
+lock_aip_two:
+  jmp lock_aip_two_newmem
+  nop 6
+lock_aip_two_return:
+registersymbol(lock_aip_two)
+
+[DISABLE]
+
+lock_aip:
+  db 55 48 8B EC 48 81 EC E0 00 00 00
+
+unregistersymbol(lock_aip_active)
+unregistersymbol(lock_aip)
+dealloc(lock_aip_newmem)
+
+lock_aip_two:
+  db 55 48 8B EC 48 81 EC B0 00 00 00
+
+unregistersymbol(lock_aip_two_active)
+unregistersymbol(lock_aip_two)
+dealloc(lock_aip_two_newmem)
+
+{
+// lock_aip
+// Arcen.AIw2.External:BaseAIFaction:ChangeAIP+0
+
+2410B01E88D: 00 00                          -  add [rax],al
+2410B01E88F: 00 00                          -  add [rax],al
+2410B01E891: 00 00                          -  add [rax],al
+2410B01E893: 00 00                          -  add [rax],al
+2410B01E895: 00 00                          -  add [rax],al
+2410B01E897: 00 00                          -  add [rax],al
+2410B01E899: 00 00                          -  add [rax],al
+2410B01E89B: 00 00                          -  add [rax],al
+2410B01E89D: 00 00                          -  add [rax],al
+2410B01E89F: 00 55                          - db 00 55  // SHORTENED TO HIT INJECTION FROM:  add [rbp+48],dl
+// ---------- INJECTING HERE ----------
+2410B01E8A1: 48 8B EC                       -  mov rbp,rsp
+2410B01E8A4: 48 81 EC E0 00 00 00           -  sub rsp,000000E0
+// ---------- DONE INJECTING  ----------
+2410B01E8AB: 48 89 5D E0                    -  mov [rbp-20],rbx
+2410B01E8AF: 48 89 75 E8                    -  mov [rbp-18],rsi
+2410B01E8B3: 4C 89 65 F0                    -  mov [rbp-10],r12
+2410B01E8B7: 4C 89 6D F8                    -  mov [rbp-08],r13
+2410B01E8BB: 48 89 95 68 FF FF FF           -  mov [rbp-00000098],rdx
+2410B01E8C2: 4C 89 85 60 FF FF FF           -  mov [rbp-000000A0],r8
+2410B01E8C9: 4C 89 8D 58 FF FF FF           -  mov [rbp-000000A8],r9
+2410B01E8D0: 48 8B CA                       -  mov rcx,rdx
+2410B01E8D3: BA 01 00 00 00                 -  mov edx,00000001
+2410B01E8D8: 48 8D 64 24 00                 -  lea rsp,[rsp+00]
+}
+
+{
+// lock_aip_two
+// Arcen.AIW2.External:BaseAIFaction:ChangeAIP+0 (again)
+
+2410B01E6BA: 00 41 FF                       -  add [rcx-01],al
+2410B01E6BD: D3 08                          -  ror [rax],cl
+2410B01E6BF: A8 12                          -  test al,12
+2410B01E6C1: 8A 41 41                       -  mov al,[rcx+41]
+2410B01E6C4: 02 00                          -  add al,[rax]
+2410B01E6C6: 00 00                          -  add [rax],al
+2410B01E6C8: 00 00                          -  add [rax],al
+2410B01E6CA: 00 00                          -  add [rax],al
+2410B01E6CC: 00 00                          -  add [rax],al
+2410B01E6CE: 00 00                          -  add [rax],al
+// ---------- INJECTING HERE ----------
+2410B01E6D0: 55                             -  push rbp
+2410B01E6D1: 48 8B EC                       -  mov rbp,rsp
+2410B01E6D4: 48 81 EC B0 00 00 00           -  sub rsp,000000B0
+// ---------- DONE INJECTING  ----------
+2410B01E6DB: 48 89 5D C8                    -  mov [rbp-38],rbx
+2410B01E6DF: 48 89 75 D0                    -  mov [rbp-30],rsi
+2410B01E6E3: 48 89 7D D8                    -  mov [rbp-28],rdi
+2410B01E6E7: 4C 89 65 E0                    -  mov [rbp-20],r12
+2410B01E6EB: 4C 89 6D E8                    -  mov [rbp-18],r13
+2410B01E6EF: 4C 89 75 F0                    -  mov [rbp-10],r14
+2410B01E6F3: 4C 89 7D F8                    -  mov [rbp-08],r15
+2410B01E6F7: 48 89 4D B0                    -  mov [rbp-50],rcx
+2410B01E6FB: 48 89 55 A8                    -  mov [rbp-58],rdx
+2410B01E6FF: 4C 89 45 A0                    -  mov [rbp-60],r8
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>38</ID>
+          <Description>"Lock AIP"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+lock_aip_active:
+dd 1
+
+lock_aip_two_active:
+dd 1
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+lock_aip_active:
+dd 0
+
+lock_aip_two_active:
+dd 0
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>
