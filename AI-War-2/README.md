@@ -17,7 +17,7 @@ Options:
     * Lock current metal to whatever your current max storage amount is
     * Lock science points to 15,000
     * Lock hacking points to 300
-    * Lock max energy to 50,000,000
+    * Lock Energy Consumption to 10k
   * Ships & Structures:
     * Lock hull for all your ships and structures to 10,000,000
     * Lock shields for all your ships and structures to 10,000,000

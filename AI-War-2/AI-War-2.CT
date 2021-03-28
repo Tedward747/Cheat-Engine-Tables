@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="31">
+<CheatTable CheatEngineTableVersion="34">
   <CheatEntries>
     <CheatEntry>
       <ID>39</ID>
-      <Description>"Info --&gt;"</Description>
+      <Description>"Check https://github.com/Tedward747/Cheat-Engine-Tables/tree/main/AI-War-2 for updates or to report issues"</Description>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{
   Game   : AIWar2
   Version: 2.715
   Author : Ted
-  GitHub : https://github.com/Tedward747/Cheat-Engine-Tables/tree/master/AI-War-2
+  GitHub : https://github.com/Tedward747/Cheat-Engine-Tables/tree/main/AI-War-2
 
   Important:
     For any of the scripts that say "Pause before toggling this one", PAUSE YOUR GAME.
@@ -25,7 +25,7 @@
       Lock current metal to whatever your current max storage amount is
       Lock science points to 15,000
       Lock hacking points to 300
-      Lock max energy to 50,000,000
+      Lock energy consumption to 10,000
     Ships &amp; Structures:
       Lock hull for all your ships and structures to 10,000,000
       Lock shields for all your ships and structures to 10,000,000
@@ -105,7 +105,7 @@ resources:
 resources_return:
 registersymbol(resources)
 
-aobscan(resources_energy,89 88 D0 01 00 00 48 8B 85 28) // should be unique
+aobscan(resources_energy,89 88 D4 01 00 00 49) // should be unique
 alloc(resources_energy_newmem,$1000,resources_energy)
 
 label(resources_energy_code)
@@ -117,11 +117,11 @@ registersymbol(resources_energy_active)
 resources_energy_newmem:
   cmp [resources_energy_active],1
   jne resources_energy_code
-  mov [rax+000001D0],#50000000 //50m energy available
+  mov [rax+000001D4],#10000 //Energy consumption to 10k
   jmp resources_energy_return
 
 resources_energy_code:
-  mov [rax+000001D0],ecx
+  mov [rax+000001D4],ecx
   jmp resources_energy_return
 
 resources_energy_active:
@@ -145,7 +145,7 @@ unregistersymbol(resources_hacking)
 dealloc(resources_newmem)
 
 resources_energy:
-  db 89 88 D0 01 00 00
+  db 89 88 D4 01 00 00
 
 unregistersymbol(resources_energy_active)
 unregistersymbol(resources_energy)
@@ -263,7 +263,7 @@ dd 0
         </CheatEntry>
         <CheatEntry>
           <ID>30</ID>
-          <Description>"Lock Energy (50m)"</Description>
+          <Description>"Lock Energy Consumption to 10k"</Description>
           <LastState/>
           <VariableType>Auto Assembler Script</VariableType>
           <AssemblerScript>[ENABLE]
