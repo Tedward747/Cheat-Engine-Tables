@@ -51,19 +51,37 @@ Options:
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>23</ID>
-      <Description>"Quality Of Life"</Description>
+      <ID>0</ID>
+      <Description>"Init"</Description>
       <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-      <LastState Value="" RealAddress="00000000"/>
-      <Color>0000FF</Color>
-      <GroupHeader>1</GroupHeader>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+{$lua}
+  if syntaxcheck then return end
+  if (process == nil or readInteger(process) == nil or process ~= "Merge Nymphs.exe") then
+    openProcess("Merge Nymphs.exe")
+  end
+  monoAA_USEMONO(process,false)
+  waitForPDB()
+{$asm}
+[DISABLE]
+</AssemblerScript>
       <CheatEntries>
         <CheatEntry>
-          <ID>1</ID>
-          <Description>"Disable Idle Check"</Description>
-          <LastState/>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
+          <ID>23</ID>
+          <Description>"Quality Of Life"</Description>
+          <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>0000FF</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>1</ID>
+              <Description>"Disable Idle Check"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -80,13 +98,13 @@ CheckForPlayerAbsence:
   db 55
 unregistersymbol(CheckForPlayerAbsence)
 </AssemblerScript>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>16</ID>
-          <Description>"Nymph Book: Require 5 Shells To Show Exclamation Mark"</Description>
-          <LastState/>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
+            </CheatEntry>
+            <CheatEntry>
+              <ID>16</ID>
+              <Description>"Nymph Book: Require 5 Shells To Show Exclamation Mark"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -120,13 +138,13 @@ unregisterSymbol(CheckIfCanMerge)
 unregisterSymbol(CheckIfCanMerge2)
 unregisterSymbol(CheckIfCanMerge3)
 </AssemblerScript>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>22</ID>
-          <Description>"Idle Nympts Stay Off Map"</Description>
-          <LastState/>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
+            </CheatEntry>
+            <CheatEntry>
+              <ID>22</ID>
+              <Description>"Idle Nympts Stay Off Map"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -169,31 +187,31 @@ unregistersymbol(IdleNymphsGoHome2)
 dealloc(IdleNymphsGoHome_Mem)
 dealloc(IdleNymphsGoHome_Dat)
 </AssemblerScript>
+            </CheatEntry>
+          </CheatEntries>
         </CheatEntry>
-      </CheatEntries>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>24</ID>
-      <Description>"Cheats"</Description>
-      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-      <LastState Value="" RealAddress="00000000"/>
-      <Color>0000FF</Color>
-      <GroupHeader>1</GroupHeader>
-      <CheatEntries>
         <CheatEntry>
-          <ID>25</ID>
-          <Description>"Alchemist"</Description>
+          <ID>24</ID>
+          <Description>"Cheats"</Description>
           <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
           <LastState Value="" RealAddress="00000000"/>
-          <Color>FF00FF</Color>
+          <Color>0000FF</Color>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
             <CheatEntry>
-              <ID>8</ID>
-              <Description>"100% Bonus Item Chance"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+              <ID>25</ID>
+              <Description>"Alchemist"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>FF00FF</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>8</ID>
+                  <Description>"100% Bonus Item Chance"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -211,13 +229,13 @@ if syntaxcheck then return end
 writeBytes(addr,bytes)
 {$asm}
 </AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>6</ID>
-              <Description>"Set items given to 9 (Enable, then leave &amp; re-enter camp)"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>6</ID>
+                  <Description>"Set items given to 9 (Enable, then leave &amp; re-enter camp)"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -241,13 +259,13 @@ AlchemistItemsGiven+1E6:
 unregistersymbol(AlchemistItemsGiven)
 dealloc(mem_AlchemistItemsGiven)
 </AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>7</ID>
-              <Description>"Trigger Alchemist Reset"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>7</ID>
+                  <Description>"Trigger Alchemist Reset"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 aobscanmodule(AlchemistReset,GameAssembly.dll,85 E4 FF 83 C4 04 F2 0F 10 05 60 CA D5 7A)
 alloc(AlchemistReset_Mem,$1000)
 label(return)
@@ -267,23 +285,23 @@ AlchemistReset+06:
 unregistersymbol(AlchemistReset)
 dealloc(AlchemistReset_Mem)
 </AssemblerScript>
+                </CheatEntry>
+              </CheatEntries>
             </CheatEntry>
-          </CheatEntries>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>26</ID>
-          <Description>"Spawning Stuff"</Description>
-          <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-          <LastState Value="" RealAddress="00000000"/>
-          <Color>FF00FF</Color>
-          <GroupHeader>1</GroupHeader>
-          <CheatEntries>
             <CheatEntry>
-              <ID>18</ID>
-              <Description>"Spawn Unlimited Floaty Things (Can get laggy AF, do not keep on for more than a couple seconds, then turn it off and wait!)"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+              <ID>26</ID>
+              <Description>"Spawning Stuff"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>FF00FF</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>18</ID>
+                  <Description>"Spawn Unlimited Floaty Things (Can get laggy AF, do not keep on for more than a couple seconds, then turn it off and wait!)"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -299,13 +317,13 @@ PassiveSpawnerConstaSpawn+05:
   db 72 1B
 unregisterSymbol(PassiveSpawnerConstaSpawn)
 </AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>19</ID>
-              <Description>"Building "Click" Spawners Constantly Spawn (Trees, Treasuries, etc)"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>19</ID>
+                  <Description>"Building "Click" Spawners Constantly Spawn (Trees, Treasuries, etc)"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -327,13 +345,13 @@ ActiveSpawnerConstaSpawn+05:
 unregisterSymbol(ActiveSpawnerConstaSpawn)
 unregisterSymbol(ActiveSpawnerConstaSpawn_Bytes)
 </AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>21</ID>
-              <Description>"Building "Drop" Spawners Constantly Spawn (Water, Oil, Panties) (Takes a while to kick in after activating, building must drop once on it's own)"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>21</ID>
+                  <Description>"Building "Drop" Spawners Constantly Spawn (Water, Oil, Panties) (Takes a while to kick in after activating, building must drop once on it's own)"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 aobscanmodule(DropSpawner,GameAssembly.dll,6A 00 FF 76 1C FF 76 18 E8) // should be unique
 alloc(DropSpawner_Mem,$1000)
 label(code)
@@ -365,23 +383,23 @@ INJECT:
 unregistersymbol(DropSpawner)
 dealloc(DropSpawner_Mem)
 </AssemblerScript>
+                </CheatEntry>
+              </CheatEntries>
             </CheatEntry>
-          </CheatEntries>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>27</ID>
-          <Description>"Resource Stuff"</Description>
-          <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-          <LastState Value="" RealAddress="00000000"/>
-          <Color>FF00FF</Color>
-          <GroupHeader>1</GroupHeader>
-          <CheatEntries>
             <CheatEntry>
-              <ID>2</ID>
-              <Description>"Disable Cheat Detection"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+              <ID>27</ID>
+              <Description>"Resource Stuff"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>FF00FF</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>2</ID>
+                  <Description>"Disable Cheat Detection"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -397,13 +415,13 @@ ReportPlayer:
   db 55
 unregistersymbol(ReportPlayer)
 </AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>17</ID>
-              <Description>"Shop Prices To Zero"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>17</ID>
+                  <Description>"Shop Prices To Zero"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -419,13 +437,13 @@ ShopPricesZero:
   db 0F AF C8 8B 45 EC 03 C1
 unregisterSymbol(ShopPricesZero)
 </AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>15</ID>
-              <Description>"Instantly Unlock All Chests in "The Vault""</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>15</ID>
+                  <Description>"Instantly Unlock All Chests in "The Vault""</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 aobscanmodule(VaultChests,GameAssembly.dll,8B 75 08 80 7E 21 00 0F 85)
 VaultChests+06:
   db 01
@@ -435,23 +453,23 @@ VaultChests+06:
   db 00
 unregistersymbol(VaultChests)
 </AssemblerScript>
+                </CheatEntry>
+              </CheatEntries>
             </CheatEntry>
-          </CheatEntries>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>28</ID>
-          <Description>"Challenge Levels"</Description>
-          <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-          <LastState Value="" RealAddress="00000000"/>
-          <Color>FF00FF</Color>
-          <GroupHeader>1</GroupHeader>
-          <CheatEntries>
             <CheatEntry>
-              <ID>10</ID>
-              <Description>"Double Bonus Rewards Cost 0 Gems"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+              <ID>28</ID>
+              <Description>"Challenge Levels"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>FF00FF</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>10</ID>
+                  <Description>"Double Bonus Rewards Cost 0 Gems"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
@@ -477,13 +495,13 @@ SetChallengeRewards+32:
 unregistersymbol(SetChallengeRewards)
 dealloc(SetChallengeRewards_Mem)
 </AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>14</ID>
-              <Description>"Disable Timer"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>14</ID>
+                  <Description>"Disable Timer"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 aobscanmodule(ChallengeTimer,GameAssembly.dll,0F 4D F0 5F 8B C6)
 ChallengeTimer:
   db 89 C6 90
@@ -494,23 +512,23 @@ ChallengeTimer:
 unregistersymbol(ChallengeTimer)
 
 </AssemblerScript>
+                </CheatEntry>
+              </CheatEntries>
             </CheatEntry>
-          </CheatEntries>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>29</ID>
-          <Description>"Misc"</Description>
-          <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-          <LastState Value="" RealAddress="00000000"/>
-          <Color>FF00FF</Color>
-          <GroupHeader>1</GroupHeader>
-          <CheatEntries>
             <CheatEntry>
-              <ID>4</ID>
-              <Description>"Buffs Activate At Max Level"</Description>
-              <LastState/>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
+              <ID>29</ID>
+              <Description>"Misc"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>FF00FF</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>4</ID>
+                  <Description>"Buffs Activate At Max Level"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
 aobscanmodule(BuffsToMax,GameAssembly.dll,FF 75 EC FF 75 E8 56 E8 96)
 BuffsToMax:
   db 6A 08 90
@@ -520,10 +538,13 @@ BuffsToMax:
   db FF 75 EC
 unregistersymbol(BuffsToMax)
 </AssemblerScript>
+                </CheatEntry>
+              </CheatEntries>
             </CheatEntry>
           </CheatEntries>
         </CheatEntry>
       </CheatEntries>
     </CheatEntry>
   </CheatEntries>
+  <UserdefinedSymbols/>
 </CheatTable>
