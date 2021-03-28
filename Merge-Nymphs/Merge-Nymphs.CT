@@ -45,6 +45,7 @@ Options:
 	  * Disable Timer: Pretty straight forward, enable before starting (or resuming) a challenge level.
 	* Misc:
 	  * All Buffs Activate At Max Level: Any time you activate a buff, it turns it into a level 8 buff before activating it
+      * Buffs Don't Get Removed When Used: Any time you activate a buff, it stays on your map
 }
 [ENABLE]
 [DISABLE]
@@ -537,6 +538,33 @@ registersymbol(BuffsToMax)
 BuffsToMax:
   db FF 75 EC
 unregistersymbol(BuffsToMax)
+</AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>30</ID>
+                  <Description>"Buffs Don't Get Removed When Used"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
+{$lua}
+if syntaxcheck then return end
+if LaunchMonoDataCollector() ~= 0 then
+    mono_compile_method(mono_findMethod('Assembly-CSharp', 'BuffStarter', 'Open'))
+end
+{$asm}
+aobScanRegion(BuffsDontDelete,BuffStarter.Open,BuffStarter.Open+1536,74 ?? 6A 00 6A 01 6A 00 50 E8)
+alloc(BuffsDontDelete_Bytes,12)
+BuffsDontDelete_Bytes:
+  readmem(BuffsDontDelete+02,12)
+BuffsDontDelete+02:
+  db 90 90 90 90 90 90 90 90 90 90 90 90
+registerSymbol(BuffsDontDelete)
+registerSymbol(BuffsDontDelete_Bytes)
+[DISABLE]
+BuffsDontDelete+02:
+  readmem(BuffsDontDelete_Bytes,12)
+unregisterSymbol(BuffsDontDelete)
+unregisterSymbol(BuffsDontDelete_Bytes)
 </AssemblerScript>
                 </CheatEntry>
               </CheatEntries>
