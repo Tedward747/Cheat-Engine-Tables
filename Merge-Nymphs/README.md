@@ -36,3 +36,5 @@ Options:
 	  * Disable Timer: Pretty straight forward, enable before starting (or resuming) a challenge level.
 	* Misc:
 	  * All Buffs Activate At Max Level: Any time you activate a buff, it turns it into a level 8 buff before activating it
+      * Buffs Don't Get Removed When Used: Any time you activate a buff, it stays on your map
+      * No Cost To Open Locked Chests/Golems/Event Chest: Should work for any camp item you click and it asks for coins, bricks or rubies to open
