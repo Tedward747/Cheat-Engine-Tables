@@ -17,6 +17,7 @@ Options:
       * 100% Bonus Item Chance: When you complete a trade, you have a 100% chance to get the bonus item. Doesn't reflect in the UI but it works.
 	  * Set Alchemist items given to 9: Makes the alchemist think you've already given her 9 of whatever item she's looking for. Enable cheat, then leave &amp; re-enter camp.
       * Trigger Alchemist Reset: Any time the Alchemist is updated (enter camp, or select her on the map, or if you activate this and you're in camp and she's currently on cooldown, maybe other cases), reset what item she wants and will give, even if she's on cooldown. When you get an item you want make sure you disable this so you don't lose it.
+	  * Trigger Shop Daily Deal Reset: Resets the daily deals the alchemist has in the shop, whether the timer is at zero or not. Remember to turn this off if you get a deal you want to keep around.
     * Spawning Stuff:
 	  * Spawn Unlimited Wind Lamps: Do not leave this running for long! Even 2-3 seconds will spawn enough for you to fill your entire camp. It takes a while for them to make their way onto the screen, so turn it on for a second or two, turn it off, and then be patient. If you spawn too many and your game starts to lag, you need to wait for them to go all the way across your camp and despawn. You can probably corrupt your save file if you let this run too long!
       * Building "Click" Spawners Constantly Spawn (Trees, Treasuries, etc): For spawners that you need to click on to get the item, as soon as you click and it drops the item, it generates another one.
