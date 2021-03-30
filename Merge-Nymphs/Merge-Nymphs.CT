@@ -70,16 +70,91 @@ Options:
   monoAA_USEMONO(process,false)
   waitForPDB()
 {$asm}
+
+alloc(My_Mem,400,$process)
+
+label(QOL)
+label(Alchemist)
+registersymbol(QOL)
+registersymbol(Alchemist)
+registersymbol(My_Mem)
+
+My_Mem:
+QOL:
+
+My_Mem+100:
+Alchemist:
+
 [DISABLE]
+unregistersymbol(QOL)
+unregistersymbol(Alchemist)
+unregistersymbol(My_Mem)
+dealloc(My_Mem)
 </AssemblerScript>
       <CheatEntries>
         <CheatEntry>
           <ID>23</ID>
           <Description>"Quality Of Life"</Description>
           <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-          <LastState Value="" RealAddress="00000000"/>
+          <LastState/>
           <Color>0000FF</Color>
-          <GroupHeader>1</GroupHeader>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+{$lua}
+if syntaxcheck then return end
+if LaunchMonoDataCollector() ~= 0 then
+    mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_3', '&lt;RandomAction&gt;b__4'))
+    mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_7', '&lt;RandomAction&gt;b__8'))
+end
+{$asm}
+aobScanRegion(IdleNymphsGoHome,&lt;&gt;c__DisplayClass55_3.&lt;RandomAction&gt;b__4,&lt;&gt;c__DisplayClass55_3.&lt;RandomAction&gt;b__4+128,F3 0F 7E 00 83 EC 14)
+aobScanRegion(IdleNymphsGoHome2,&lt;&gt;c__DisplayClass55_7.&lt;RandomAction&gt;b__8,&lt;&gt;c__DisplayClass55_7.&lt;RandomAction&gt;b__8+128,F3 0F 7E 00 83 EC 14)
+label(IdleNymphsGoHome_Return)
+label(IdleNymphsGoHome_Enable)
+label(IdleNymphsGoHome_Data)
+label(IdleNymphsGoHome_Code)
+registersymbol(IdleNymphsGoHome_Enable)
+registersymbol(IdleNymphsGoHome_Data)
+registersymbol(IdleNymphsGoHome_Code)
+registersymbol(IdleNymphsGoHome)
+registersymbol(IdleNymphsGoHome2)
+
+QOL:
+IdleNymphsGoHome_Enable:
+  dw 00
+  db CC CC CC
+IdleNymphsGoHome_Data:
+  db 00 00 01 01
+  db CC CC CC
+IdleNymphsGoHome_Code:
+  cmp byte ptr [IdleNymphsGoHome_Enable],0x1
+  movd xmm0,[IdleNymphsGoHome_Data]
+  db 74 04
+  movq xmm0,[eax]
+  sub esp,14
+  jmp IdleNymphsGoHome_Return
+  db CC CC CC
+
+IdleNymphsGoHome:
+  jmp IdleNymphsGoHome_Code
+  nop 2
+IdleNymphsGoHome2:
+  jmp IdleNymphsGoHome_Code
+  nop 2
+IdleNymphsGoHome_Return:
+
+[DISABLE]
+IdleNymphsGoHome:
+  db F3 0F 7E 00 83 EC 14
+IdleNymphsGoHome2:
+  db F3 0F 7E 00 83 EC 14
+
+unregistersymbol(IdleNymphsGoHome)
+unregistersymbol(IdleNymphsGoHome2)
+unregistersymbol(IdleNymphsGoHome_Enable)
+unregistersymbol(IdleNymphsGoHome_Data)
+unregistersymbol(IdleNymphsGoHome_Code)
+</AssemblerScript>
           <CheatEntries>
             <CheatEntry>
               <ID>1</ID>
@@ -150,47 +225,11 @@ unregisterSymbol(CheckIfCanMerge3)
               <LastState/>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
-{$lua}
-if syntaxcheck then return end
-if LaunchMonoDataCollector() ~= 0 then
-    mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_3', '&lt;RandomAction&gt;b__4'))
-    mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_7', '&lt;RandomAction&gt;b__8'))
-end
-{$asm}
-aobScanRegion(IdleNymphsGoHome,&lt;&gt;c__DisplayClass55_3.&lt;RandomAction&gt;b__4,&lt;&gt;c__DisplayClass55_3.&lt;RandomAction&gt;b__4+128,F3 0F 7E 00 83 EC 14)
-aobScanRegion(IdleNymphsGoHome2,&lt;&gt;c__DisplayClass55_7.&lt;RandomAction&gt;b__8,&lt;&gt;c__DisplayClass55_7.&lt;RandomAction&gt;b__8+128,F3 0F 7E 00 83 EC 14)
-alloc(IdleNymphsGoHome_Mem,$1000)
-alloc(IdleNymphsGoHome_Dat,$1000)
-label(return)
-
-IdleNymphsGoHome_Dat:
-db 01 01
-
-IdleNymphsGoHome_Mem:
-  movq xmm0,[IdleNymphsGoHome_Dat]
-  sub esp,14
-  jmp return
-
-IdleNymphsGoHome:
-  jmp IdleNymphsGoHome_Mem
-  nop 2
-IdleNymphsGoHome2:
-  jmp IdleNymphsGoHome_Mem
-  nop 2
-return:
-registersymbol(IdleNymphsGoHome)
-registersymbol(IdleNymphsGoHome2)
-
+IdleNymphsGoHome_Enable:
+  db 1
 [DISABLE]
-IdleNymphsGoHome:
-  db F3 0F 7E 00 83 EC 14
-IdleNymphsGoHome2:
-  db F3 0F 7E 00 83 EC 14
-
-unregistersymbol(IdleNymphsGoHome)
-unregistersymbol(IdleNymphsGoHome2)
-dealloc(IdleNymphsGoHome_Mem)
-dealloc(IdleNymphsGoHome_Dat)
+IdleNymphsGoHome_Enable:
+  db 0
 </AssemblerScript>
             </CheatEntry>
           </CheatEntries>
