@@ -75,8 +75,10 @@ alloc(My_Mem,400,$process)
 
 label(QOL)
 label(Alchemist)
+label(My_Error)
 registersymbol(QOL)
 registersymbol(Alchemist)
+registersymbol(My_Error)
 registersymbol(My_Mem)
 
 My_Mem:
@@ -85,9 +87,13 @@ QOL:
 My_Mem+100:
 Alchemist:
 
+My_Mem+390:
+My_Error:
+
 [DISABLE]
 unregistersymbol(QOL)
 unregistersymbol(Alchemist)
+unregistersymbol(My_Error)
 unregistersymbol(My_Mem)
 dealloc(My_Mem)
 </AssemblerScript>
@@ -103,12 +109,22 @@ dealloc(My_Mem)
 {$lua}
 if syntaxcheck then return end
 if LaunchMonoDataCollector() ~= 0 then
-    mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_3', '&lt;RandomAction&gt;b__4'))
-    mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_7', '&lt;RandomAction&gt;b__8'))
+  local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_3', '&lt;RandomAction&gt;b__4'))
+  local addr2 = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_7', '&lt;RandomAction&gt;b__8'))
+  if (addr == nil or addr2 == nil) then
+    local mr = getAddressList().getMemoryRecordByID(22)
+    mr.setDescription("Disabled, can't find method: " .. mr.Description)
+    mr.Type = 0
+    return("define(IdleNymphsGoHome,My_Error)\n" ..
+           "define(IdleNymphsGoHome2,My_Error)")
+  else
+    return("aobScanRegion(IdleNymphsGoHome," .. string.format("%x", addr) .. "," .. string.format("%x", addr+128) .. ",F3 0F 7E 00 83 EC 14)\n" ..
+           "aobScanRegion(IdleNymphsGoHome2," .. string.format("%x", addr2) .. "," .. string.format("%x", addr2+128) .. ",F3 0F 7E 00 83 EC 14)")
+  end
 end
 {$asm}
-aobScanRegion(IdleNymphsGoHome,&lt;&gt;c__DisplayClass55_3.&lt;RandomAction&gt;b__4,&lt;&gt;c__DisplayClass55_3.&lt;RandomAction&gt;b__4+128,F3 0F 7E 00 83 EC 14)
-aobScanRegion(IdleNymphsGoHome2,&lt;&gt;c__DisplayClass55_7.&lt;RandomAction&gt;b__8,&lt;&gt;c__DisplayClass55_7.&lt;RandomAction&gt;b__8+128,F3 0F 7E 00 83 EC 14)
+
+
 label(IdleNymphsGoHome_Return)
 label(IdleNymphsGoHome_Enable)
 label(IdleNymphsGoHome_Data)
