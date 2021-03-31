@@ -61,14 +61,33 @@ Options:
       <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>[ENABLE]
-{$lua}
+      <AssemblerScript>{$lua}
   if syntaxcheck then return end
-  if (process == nil or readInteger(process) == nil or process ~= "Merge Nymphs.exe") then
-    openProcess("Merge Nymphs.exe")
+
+  function aobScanRegion(SYMBOL, START, END, AOB)
+    local CODE = [[aobScanRegion(%s, %s, %s, %s)
+    registerSymbol(%s)]]
+
+    if type(START) == 'number' then START = ('%X'):format(START) end
+    if type(END) == 'number' then END = ('%X'):format(END) end
+    CODE = CODE:format(SYMBOL, START, END, AOB, SYMBOL)
+
+    if not autoAssemble(CODE) then return nil end
+    return 1
   end
-  monoAA_USEMONO(process,false)
-  waitForPDB()
+
+  function error_mr(ID)
+    local mr = getAddressList().getMemoryRecordByID(ID)
+    mr.setDescription("Disabled, can't find method: " .. mr.Description)
+    mr.Type = 0
+  end
+
+[ENABLE]
+if (process == nil or readInteger(process) == nil or process ~= "Merge Nymphs.exe") then
+  openProcess("Merge Nymphs.exe")
+end
+monoAA_USEMONO(process,false)
+waitForPDB()
 {$asm}
 
 alloc(My_Mem,400,$process)
@@ -91,6 +110,7 @@ My_Mem+390:
 My_Error:
 
 [DISABLE]
+{$asm}
 unregistersymbol(QOL)
 unregistersymbol(Alchemist)
 unregistersymbol(My_Error)
