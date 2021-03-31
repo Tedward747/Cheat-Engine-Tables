@@ -81,6 +81,30 @@ Options:
     mr.setDescription("Disabled, can't find method: " .. mr.Description)
     mr.Type = 0
   end
+  
+function mono_findMethodByArgCount(namespace, classname, methodname, arguments)
+  if namespace==nil or classname==nil or methodname==nil or arguments==nil then
+    return nil,'invalid parameters'
+  end
+
+  local class=mono_findClass(namespace, classname)
+  if class and (class~=0) then
+    local methods = mono_class_enumMethods(class)
+    for i=1, #methods do
+      if methods[i].name == methodname then
+        local count = 0
+        local signature = mono_method_getSignature(methods[i].method)
+        if #signature ~= 0 then
+          for m in string.gmatch(signature, "[^,]+") do count=count+1 end
+        end
+        if count == arguments then
+          return methods[i].method
+        end
+      end
+    end
+  end
+  return 0
+end
 
 [ENABLE]
 if (process == nil or readInteger(process) == nil or process ~= "Merge Nymphs.exe") then
