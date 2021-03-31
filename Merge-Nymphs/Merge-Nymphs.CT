@@ -168,6 +168,12 @@ local IdleNymphsGoHome_CodeDisable = [[
   unregistersymbol(IdleNymphsGoHome_Code)
 ]]
 
+local CheckIfCanMerge_CodeDisable = [[
+  unregistersymbol(CheckIfCanMerge)
+  unregistersymbol(CheckIfCanMerge2)
+  unregistersymbol(CheckIfCanMerge3)
+]]
+
 [ENABLE]
 if LaunchMonoDataCollector() ~= 0 then
   local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_3', '&lt;RandomAction&gt;b__4'))
@@ -183,11 +189,29 @@ if LaunchMonoDataCollector() ~= 0 then
   else
     error_mr(22)
   end
+
+  local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'NymphBookCampButton', 'CheckIfCanMerge'))
+  local addr2 = mono_compile_method(mono_findMethod('Assembly-CSharp', 'NymphBook', 'Show'))  -- How do I get the right version of this method?
+  local addr3 = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass98_0', '&lt;BuyShell&gt;b__0'))
+  if (addr ~= nil and addr2 ~= nil and addr3 ~= nil) then
+    local scan = aobScanRegion('CheckIfCanMerge',addr,addr+512,'83 C4 08 83 F8 02 0F 8E')
+    local scan2 = aobScanRegion('CheckIfCanMerge2',addr2,addr2+2048,'83 C4 08 83 F8 02 0F 8E')
+    local scan3 = aobScanRegion('CheckIfCanMerge3',addr3,addr3+512,'83 C4 0C 83 F8 02')
+    if (scan == nil or scan2 == nil or scan3 == nil) then
+      error_mr(16)
+    end
+  else
+    error_mr(16)
+  end
 end
 
 [DISABLE]
 if getAddressSafe('IdleNymphsGoHome') then
   autoAssemble(IdleNymphsGoHome_CodeDisable)
+end
+
+if getAddressSafe('CheckIfCanMerge') then
+  autoAssemble(CheckIfCanMerge_CodeDisable)
 end
 </AssemblerScript>
           <CheatEntries>
@@ -220,27 +244,12 @@ unregistersymbol(CheckForPlayerAbsence)
               <LastState/>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
-{$lua}
-if syntaxcheck then return end
-if LaunchMonoDataCollector() ~= 0 then
-    mono_compile_method(mono_findMethod('Assembly-CSharp', 'NymphBookCampButton', 'CheckIfCanMerge'))
-    mono_compile_method(mono_findMethod('Assembly-CSharp', 'NymphBook', 'Show'))
-    mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass98_0', '&lt;BuyShell&gt;b__0'))
-end
-{$asm}
-aobScanRegion(CheckIfCanMerge,NymphBookCampButton.CheckIfCanMerge,NymphBookCampButton.CheckIfCanMerge+512,83 C4 08 83 F8 02 0F 8E)
-aobScanRegion(CheckIfCanMerge2,NymphBook.Show,NymphBook.Show+2048,83 C4 08 83 F8 02 0F 8E)
-aobScanRegion(CheckIfCanMerge3,&lt;&gt;c__DisplayClass98_0.&lt;BuyShell&gt;b__0,&lt;&gt;c__DisplayClass98_0.&lt;BuyShell&gt;b__0+512,83 C4 0C 83 F8 02)
-
 CheckIfCanMerge+05:
   db 04
 CheckIfCanMerge2+05:
   db 04
 CheckIfCanMerge3+05:
   db 04
-registerSymbol(CheckIfCanMerge)
-registerSymbol(CheckIfCanMerge2)
-registerSymbol(CheckIfCanMerge3)
 
 [DISABLE]
 CheckIfCanMerge+05:
@@ -249,9 +258,6 @@ CheckIfCanMerge2+05:
   db 02
 CheckIfCanMerge3+05:
   db 02
-unregisterSymbol(CheckIfCanMerge)
-unregisterSymbol(CheckIfCanMerge2)
-unregisterSymbol(CheckIfCanMerge3)
 </AssemblerScript>
             </CheatEntry>
             <CheatEntry>
