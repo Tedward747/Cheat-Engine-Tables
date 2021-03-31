@@ -215,7 +215,7 @@ if LaunchMonoDataCollector() ~= 0 then
   end
 
   local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'NymphBookCampButton', 'CheckIfCanMerge'))
-  local addr2 = mono_compile_method(mono_findMethod('Assembly-CSharp', 'NymphBook', 'Show'))  -- How do I get the right version of this method?
+  local addr2 = mono_compile_method(mono_findMethodByArgCount('Assembly-CSharp', 'NymphBook', 'Show', 0))
   local addr3 = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass98_0', '&lt;BuyShell&gt;b__0'))
   if (addr ~= nil and addr2 ~= nil and addr3 ~= nil) then
     local scan = aobScanRegion('CheckIfCanMerge',addr,addr+512,'83 C4 08 83 F8 02 0F 8E')
