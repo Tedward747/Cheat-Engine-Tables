@@ -94,10 +94,8 @@ alloc(My_Mem,400,$process)
 
 label(QOL)
 label(Alchemist)
-label(My_Error)
 registersymbol(QOL)
 registersymbol(Alchemist)
-registersymbol(My_Error)
 registersymbol(My_Mem)
 
 My_Mem:
@@ -106,14 +104,10 @@ QOL:
 My_Mem+100:
 Alchemist:
 
-My_Mem+390:
-My_Error:
-
 [DISABLE]
 {$asm}
 unregistersymbol(QOL)
 unregistersymbol(Alchemist)
-unregistersymbol(My_Error)
 unregistersymbol(My_Mem)
 dealloc(My_Mem)
 </AssemblerScript>
@@ -125,71 +119,76 @@ dealloc(My_Mem)
           <LastState/>
           <Color>0000FF</Color>
           <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
-{$lua}
+          <AssemblerScript>{$lua}
 if syntaxcheck then return end
+local IdleNymphsGoHome_CodeEnable = [[
+  label(IdleNymphsGoHome_Return)
+  label(IdleNymphsGoHome_Enable)
+  label(IdleNymphsGoHome_Data)
+  label(IdleNymphsGoHome_Code)
+  registersymbol(IdleNymphsGoHome_Enable)
+  registersymbol(IdleNymphsGoHome_Data)
+  registersymbol(IdleNymphsGoHome_Code)
+
+  QOL:
+  IdleNymphsGoHome_Enable:
+    dw 00
+    db CC CC CC
+  IdleNymphsGoHome_Data:
+    db 00 00 01 01
+    db CC CC CC
+  IdleNymphsGoHome_Code:
+    cmp byte ptr [IdleNymphsGoHome_Enable],0x1
+    movd xmm0,[IdleNymphsGoHome_Data]
+    db 74 04
+    movq xmm0,[eax]
+    sub esp,14
+    jmp IdleNymphsGoHome_Return
+    db CC CC CC
+
+  IdleNymphsGoHome:
+    jmp IdleNymphsGoHome_Code
+    nop 2
+  IdleNymphsGoHome2:
+    jmp IdleNymphsGoHome_Code
+    nop 2
+  IdleNymphsGoHome_Return:
+]]
+
+local IdleNymphsGoHome_CodeDisable = [[
+  IdleNymphsGoHome:
+    db F3 0F 7E 00 83 EC 14
+  IdleNymphsGoHome2:
+    db F3 0F 7E 00 83 EC 14
+
+  unregistersymbol(IdleNymphsGoHome)
+  unregistersymbol(IdleNymphsGoHome2)
+  unregistersymbol(IdleNymphsGoHome_Enable)
+  unregistersymbol(IdleNymphsGoHome_Data)
+  unregistersymbol(IdleNymphsGoHome_Code)
+]]
+
+[ENABLE]
 if LaunchMonoDataCollector() ~= 0 then
   local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_3', '&lt;RandomAction&gt;b__4'))
   local addr2 = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_7', '&lt;RandomAction&gt;b__8'))
-  if (addr == nil or addr2 == nil) then
-    local mr = getAddressList().getMemoryRecordByID(22)
-    mr.setDescription("Disabled, can't find method: " .. mr.Description)
-    mr.Type = 0
-    return("define(IdleNymphsGoHome,My_Error)\n" ..
-           "define(IdleNymphsGoHome2,My_Error)")
+  if (addr ~= nil and addr2 ~= nil) then
+    local scan = aobScanRegion('IdleNymphsGoHome',addr,addr+128,'F3 0F 7E 00 83 EC 14')
+    local scan2 = aobScanRegion('IdleNymphsGoHome2',addr2,addr2+128,'F3 0F 7E 00 83 EC 14')
+    if (scan ~= nil and scan2 ~= nil) then
+      if not autoAssemble(IdleNymphsGoHome_CodeEnable) then error_mr(22) end
+    else
+      error_mr(22)
+    end
   else
-    return("aobScanRegion(IdleNymphsGoHome," .. string.format("%x", addr) .. "," .. string.format("%x", addr+128) .. ",F3 0F 7E 00 83 EC 14)\n" ..
-           "aobScanRegion(IdleNymphsGoHome2," .. string.format("%x", addr2) .. "," .. string.format("%x", addr2+128) .. ",F3 0F 7E 00 83 EC 14)")
+    error_mr(22)
   end
 end
-{$asm}
-
-
-label(IdleNymphsGoHome_Return)
-label(IdleNymphsGoHome_Enable)
-label(IdleNymphsGoHome_Data)
-label(IdleNymphsGoHome_Code)
-registersymbol(IdleNymphsGoHome_Enable)
-registersymbol(IdleNymphsGoHome_Data)
-registersymbol(IdleNymphsGoHome_Code)
-registersymbol(IdleNymphsGoHome)
-registersymbol(IdleNymphsGoHome2)
-
-QOL:
-IdleNymphsGoHome_Enable:
-  dw 00
-  db CC CC CC
-IdleNymphsGoHome_Data:
-  db 00 00 01 01
-  db CC CC CC
-IdleNymphsGoHome_Code:
-  cmp byte ptr [IdleNymphsGoHome_Enable],0x1
-  movd xmm0,[IdleNymphsGoHome_Data]
-  db 74 04
-  movq xmm0,[eax]
-  sub esp,14
-  jmp IdleNymphsGoHome_Return
-  db CC CC CC
-
-IdleNymphsGoHome:
-  jmp IdleNymphsGoHome_Code
-  nop 2
-IdleNymphsGoHome2:
-  jmp IdleNymphsGoHome_Code
-  nop 2
-IdleNymphsGoHome_Return:
 
 [DISABLE]
-IdleNymphsGoHome:
-  db F3 0F 7E 00 83 EC 14
-IdleNymphsGoHome2:
-  db F3 0F 7E 00 83 EC 14
-
-unregistersymbol(IdleNymphsGoHome)
-unregistersymbol(IdleNymphsGoHome2)
-unregistersymbol(IdleNymphsGoHome_Enable)
-unregistersymbol(IdleNymphsGoHome_Data)
-unregistersymbol(IdleNymphsGoHome_Code)
+if getAddressSafe('IdleNymphsGoHome') then
+  autoAssemble(IdleNymphsGoHome_CodeDisable)
+end
 </AssemblerScript>
           <CheatEntries>
             <CheatEntry>
