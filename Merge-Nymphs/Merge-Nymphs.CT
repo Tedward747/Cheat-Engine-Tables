@@ -46,6 +46,10 @@ Options:
 	* Challenge Levels:
 	  * Double Bonus Rewards Cost 0 Gems: Pretty straight forward, enable before starting (or resuming) a challenge level.
 	  * Disable Timer: Pretty straight forward, enable before starting (or resuming) a challenge level.
+    * Dating Sim:
+      * No Energy Cost: Starting a new chat doesn't reduce available energy.
+      * Give Items Doesn't Require Items: After chatting when the Nymph wants items, this sets your available amout to what she's looking for, and clicking 'Give' doesn't actually take any items.
+      * All Answers Are Correct: Doesn't matter which answer you pick, she'll be happy.
 	* Misc:
 	  * All Buffs Activate At Max Level: Any time you activate a buff, it turns it into a level 8 buff before activating it
       * Buffs Don't Get Removed When Used: Any time you activate a buff, it stays on your map
