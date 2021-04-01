@@ -712,6 +712,59 @@ unregistersymbol(ChallengeTimer)
               </CheatEntries>
             </CheatEntry>
             <CheatEntry>
+              <ID>39</ID>
+              <Description>"Dating Sim"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <LastState/>
+              <Color>FF00FF</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$lua}
+if syntaxcheck then return end
+local DatingSimNoEnergy_CodeEnable = [[
+  label(DatingSimNoEnergy)
+  %s:
+  DatingSimNoEnergy:
+  registersymbol(DatingSimNoEnergy)
+]]
+
+local DatingSimNoEnergy_CodeDisable = [[
+  unregistersymbol(DatingSimNoEnergy)
+]]
+
+[ENABLE]
+if LaunchMonoDataCollector() ~= 0 then
+  local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'DatingSimManager', 'SubstractChatEnergy'))
+  if addr ~= nil then
+    addr = ('%X'):format(addr)
+    DatingSimNoEnergy_CodeEnable = DatingSimNoEnergy_CodeEnable:format(addr)
+    if not autoAssemble(DatingSimNoEnergy_CodeEnable) then error_mr(40) end
+  else
+    error_mr(40)
+  end
+end
+
+[DISABLE]
+if getAddressSafe('DatingSimNoEnergy') then
+  autoAssemble(DatingSimNoEnergy_CodeDisable)
+end
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>40</ID>
+                  <Description>"No Energy Cost"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
+DatingSimNoEnergy:
+  db C3
+[DISABLE]
+DatingSimNoEnergy:
+  db 55
+</AssemblerScript>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
               <ID>29</ID>
               <Description>"Misc"</Description>
               <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
