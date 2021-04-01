@@ -50,6 +50,7 @@ Options:
 	  * All Buffs Activate At Max Level: Any time you activate a buff, it turns it into a level 8 buff before activating it
       * Buffs Don't Get Removed When Used: Any time you activate a buff, it stays on your map
       * No Cost To Open Locked Chests/Golems/Event Chest: Should work for any camp item you click and it asks for coins, bricks or rubies to open
+	  * Merge N Gives N: Instead of merging 3 to get 1 or 5 to get 2, 3 gives 3, 5 gives 5, 32 gives 32 etc. Works for manually merging on map, and through Nymph book.
 }
 [ENABLE]
 [DISABLE]
@@ -806,6 +807,52 @@ unregisterSymbol(ChestOpenByCurrency)
 unregisterSymbol(ChestOpenByCurrency2)
 unregisterSymbol(ChestOpenByCurrency2_Mem)
 dealloc(ChestOpenByCurrency2_Mem)
+</AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>38</ID>
+                  <Description>"Merge N Gives N (i.e. Merge 5 gives 5 instead of 2)"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>{$lua}
+if syntaxcheck then return end
+
+[ENABLE]
+if LaunchMonoDataCollector() ~= 0 then
+  local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;MergeCorutineFunction&gt;d__85', 'MoveNext'))
+  local addr2 = mono_compile_method(mono_findMethod('Assembly-CSharp', 'MergeManager', 'SpawnObjectToMergeObjectCount'))
+  if (addr ~= nil and addr2 ~= nil) then
+    local scan = aobScanRegion('MergeNGivesN',addr,addr+3584,'83 7E 18 05 0F 94 C0 40')
+    local scan2 = aobScanRegion('MergeNGivesN2',addr2,addr2+128,'55 8B EC 56 8B 75 0C 83 FE')
+    if (scan == nil or scan2 == nil) then
+      error_mr(38)
+    end
+  else
+    error_mr(38)
+  end
+end
+{$asm}
+MergeNGivesN:
+  db 8B 46 18 90 90 90 90 90
+
+MergeNGivesN2:
+  push ebp
+  mov ebp,esp
+  mov eax,[ebp+0C]
+  pop ebp
+  ret
+  db 90 90
+
+[DISABLE]
+{$asm}
+MergeNGivesN:
+  db 83 7E 18 05 0F 94 C0 40
+
+MergeNGivesN2:
+  db 55 8B EC 56 8B 75 0C 83 FE 03
+
+unregistersymbol(MergeNGivesN)
+unregistersymbol(MergeNGivesN2)
 </AssemblerScript>
                 </CheatEntry>
               </CheatEntries>
