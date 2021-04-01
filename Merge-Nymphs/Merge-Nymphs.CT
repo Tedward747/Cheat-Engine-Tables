@@ -761,6 +761,49 @@ local DatingSimNoEnergy_CodeDisable = [[
   unregistersymbol(DatingSimNoEnergy)
 ]]
 
+local DatingSimNoItems_CodeEnable = [[
+  label(DatingSimNoItems_Return)
+  label(DatingSimNoItems_Enable)
+  label(DatingSimNoItems_Code)
+  label(DatingSimNoItems3_Data)
+  registersymbol(DatingSimNoItems_Enable)
+  registersymbol(DatingSimNoItems_Code)
+  registersymbol(DatingSimNoItems3_Data)
+
+  Dating:
+  DatingSimNoItems_Enable:
+    dw 00
+    db CC CC CC
+  DatingSimNoItems3_Data:
+    readmem(DatingSimNoItems3+A,4)
+    db CC CC CC
+  DatingSimNoItems_Code:
+    cmp byte ptr [DatingSimNoItems_Enable],0x0
+    db 74 02
+    mov eax,[ebx]
+    test eax,eax
+    mov [ecx],eax
+    setg cl
+    jmp DatingSimNoItems_Return
+
+  DatingSimNoItems:
+    jmp DatingSimNoItems_Code
+    nop 2
+  DatingSimNoItems_Return:
+]]
+
+local DatingSimNoItems_CodeDisable = [[
+  DatingSimNoItems:
+    db 85 C0 89 01 0F 9F C1
+
+  unregistersymbol(DatingSimNoItems)
+  unregistersymbol(DatingSimNoItems2)
+  unregistersymbol(DatingSimNoItems3)
+  unregistersymbol(DatingSimNoItems_Enable)
+  unregistersymbol(DatingSimNoItems_Code)
+  unregistersymbol(DatingSimNoItems3_Data)
+]]
+
 [ENABLE]
 if LaunchMonoDataCollector() ~= 0 then
   local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'DatingSimManager', 'SubstractChatEnergy'))
@@ -771,11 +814,31 @@ if LaunchMonoDataCollector() ~= 0 then
   else
     error_mr(40)
   end
+
+  local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'ItemRequestInfo', 'AnalyzeRequest'))
+  local addr2 = mono_compile_method(mono_findMethod('Assembly-CSharp', 'ItemRequestInfo', 'GiveItems'))
+  local addr3 = mono_compile_method(mono_findMethod('Assembly-CSharp', 'NymphDatingInfo', 'GiveItems'))
+  if addr ~= nil or addr2 ~= nil or addr3 ~= nil then
+    local scan = aobScanRegion('DatingSimNoItems',addr,addr+256,'85 C0 89 01 0F 9F C1')
+    local scan2 = aobScanRegion('DatingSimNoItems2',addr2,addr2+64,'3B C1 0F 4F C1')
+    local scan3 = aobScanRegion('DatingSimNoItems3',addr3,addr3+1024,'6A 00 FF 75 FC FF 75 F8 50 E8')
+    if (scan ~= nil and scan2 ~= nil and scan3 ~= nil) then
+      if not autoAssemble(DatingSimNoItems_CodeEnable) then error_mr(46) end
+    else
+      error_mr(46)
+    end
+  else
+    error_mr(46)
+  end
 end
 
 [DISABLE]
 if getAddressSafe('DatingSimNoEnergy') then
   autoAssemble(DatingSimNoEnergy_CodeDisable)
+end
+
+if getAddressSafe('DatingSimNoItems') then
+  autoAssemble(DatingSimNoItems_CodeDisable)
 end
 </AssemblerScript>
               <CheatEntries>
@@ -790,6 +853,28 @@ DatingSimNoEnergy:
 [DISABLE]
 DatingSimNoEnergy:
   db 55
+</AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>46</ID>
+                  <Description>"Give Items Doesn't Require Items"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
+DatingSimNoItems_Enable:
+  db 1
+DatingSimNoItems2:
+  db 8B C1 90 90 90
+DatingSimNoItems3:
+  db 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+[DISABLE]
+DatingSimNoItems_Enable:
+  db 0
+DatingSimNoItems2:
+  db 3B C1 0F 4F C1
+DatingSimNoItems3:
+  db 6A 00 FF 75 FC FF 75 F8 50 E8
+  readmem(DatingSimNoItems3_Data,4)
 </AssemblerScript>
                 </CheatEntry>
               </CheatEntries>
