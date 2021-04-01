@@ -115,12 +115,22 @@ monoAA_USEMONO(process,false)
 waitForPDB()
 {$asm}
 
-alloc(My_Mem,400,$process)
+alloc(My_Mem,700,$process)
 
 label(QOL)
 label(Alchemist)
+label(Spawning)
+label(Resource)
+label(Challenge)
+label(Dating)
+label(Misc)
 registersymbol(QOL)
 registersymbol(Alchemist)
+registersymbol(Spawning)
+registersymbol(Resource)
+registersymbol(Challenge)
+registersymbol(Dating)
+registersymbol(Misc)
 registersymbol(My_Mem)
 
 My_Mem:
@@ -129,10 +139,30 @@ QOL:
 My_Mem+100:
 Alchemist:
 
+My_Mem+200:
+Spawning:
+
+My_Mem+300:
+Resource:
+
+My_Mem+400:
+Challenge:
+
+My_Mem+500:
+Dating:
+
+My_Mem+600:
+Misc:
+
 [DISABLE]
 {$asm}
 unregistersymbol(QOL)
 unregistersymbol(Alchemist)
+unregistersymbol(Spawning)
+unregistersymbol(Resource)
+unregistersymbol(Challenge)
+unregistersymbol(Dating)
+unregistersymbol(Misc)
 unregistersymbol(My_Mem)
 dealloc(My_Mem)
 </AssemblerScript>
