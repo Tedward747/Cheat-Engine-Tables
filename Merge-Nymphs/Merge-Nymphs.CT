@@ -804,6 +804,10 @@ local DatingSimNoItems_CodeDisable = [[
   unregistersymbol(DatingSimNoItems3_Data)
 ]]
 
+local DatingSimAlwaysRight_CodeDisable = [[
+  unregistersymbol(DatingSimAlwaysRight)
+]]
+
 [ENABLE]
 if LaunchMonoDataCollector() ~= 0 then
   local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'DatingSimManager', 'SubstractChatEnergy'))
@@ -830,6 +834,16 @@ if LaunchMonoDataCollector() ~= 0 then
   else
     error_mr(46)
   end
+
+  local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'UIChatWindow', 'OnAnswerButtonClick'))
+  if addr ~= nil then
+    local scan = aobScanRegion('DatingSimAlwaysRight',addr,addr+512,'6A 00 51 3B 41 5C')
+    if scan == nil then
+      error_mr(47)
+    end
+  else
+    error_mr(47)
+  end
 end
 
 [DISABLE]
@@ -839,6 +853,10 @@ end
 
 if getAddressSafe('DatingSimNoItems') then
   autoAssemble(DatingSimNoItems_CodeDisable)
+end
+
+if getAddressSafe('DatingSimAlwaysRight') then
+  autoAssemble(DatingSimAlwaysRight_CodeDisable)
 end
 </AssemblerScript>
               <CheatEntries>
@@ -875,6 +893,19 @@ DatingSimNoItems2:
 DatingSimNoItems3:
   db 6A 00 FF 75 FC FF 75 F8 50 E8
   readmem(DatingSimNoItems3_Data,4)
+</AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>47</ID>
+                  <Description>"All Answers Are Correct"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
+DatingSimAlwaysRight+06:
+  db EB
+[DISABLE]
+DatingSimAlwaysRight+06:
+  db 74
 </AssemblerScript>
                 </CheatEntry>
               </CheatEntries>
