@@ -46,3 +46,4 @@ Options:
 	  * Buffs Don't Get Removed When Used: Any time you activate a buff, it stays on your map
 	  * No Cost To Open Locked Chests/Golems/Event Chest: Should work for any camp item you click and it asks for coins, bricks or rubies to open
 	  * Merge N Gives N: Instead of merging 3 to get 1 or 5 to get 2, 3 gives 3, 5 gives 5, 32 gives 32 etc. Works for manually merging on map, and through Nymph book.
+	  * Healing Pheremones Ignore Dead Land: Healing Pheremones and Flower Beds don't try to heal any dead land (the tiles you need to merge to heal). If there are no healable tiles, the extra goes towards your points as if there were no dead land tiles.
