@@ -70,6 +70,11 @@ Options:
       <AssemblerScript>{$lua}
 if syntaxcheck then return end
 
+local game = 'Merge-Nymphs'
+local currentVersion = 'V4'
+
+decodeFunction('c-pO1Pj4GV6o0cGuU)U+RUHXYAelp2I3%$_iz:Z2yLIfSA#JKOMM7$XHr_Q7%6i9_9mg?J+]PGs]3fBQ5Np*XPthAkj?-,e-E_U+kPu;{?tc_Vci#KG:l8dU-cxw+$JyGg8m-c5[4sSJ^5}Ez1PE@K.j*01k-Tsm[#Np[8c0:xz5@Or0QBZ=.CqTUd%SbF,mqb$;1,py.]xbWCbM57e;XeWH/7f#fy4pu)d3y/VUhxri3XPtc/m([xH=DaZ(M%):/:20!ZI5A%;nXCPmpRbVN@@QGhMD8MvBXbD=0P,GA3F/(a/7Z]Hh{ZgZQ(XLwcjtZlHR?^b9@yN1#?uRy)5K+yaAnlm7jC[Zz6_sg,jL4I.j;;,Od.ZuGq%YS4NkMBA{C.xZ0Iw5pELVLXmHJt=B#J5H-Ua-_rTikB0Tz21b]$gawU+qG2It*U8[ZOlX@y+MXtolpLH*,e?hz*cC9.[D{v*-pQTg9K[0d}bt]@g%^L@n-V(HfFAt.vLe@DejP8fhM%k**Hpa?UEVTQ@I]^tD_8PUY]A_0XDV%!DQT2kCwcUUdP/JzAt$kZw0ZUcEm?Ic4$2Zz$4xla:gPkLi*6lu_6s2T^@SQ/Bkjl3Uf$5%nQccBQFR_vX_Ld3[p@biHOnJWtOL$1u;(H*;c.7[JBuhBP$_)XFGB]DmX$Bx?4H@VibkK@BKBgMVXiq3[TtyF]#qa0M-3n)TbED+Qc/jGX-vgK9{?bhNdGgtp7m?esw#[dHLBQ7LcsSbGU9}cO}1D7R%+gnoW83FnuPS7yUB)w8z7,b/8[M#pgetf-)o;zd?mroaa!q?.FNH[GjwDvR!Shh@K.Zb9Elm*kZr-I(le/?h$ENfj#FWheK-M?E}i[4d*j}w3Rh#l3H,%HVEpp5Ozs_Iyyn^l=+)_qSJ(0hiC)xBrU/OunxAn4!#4^LR!^sw7a2Sq6IK[B$uNo+Fw1#w3C+BoVA#q!$NB57wG?YamWN.k.Uwqn1M^t?9PwY1lq]D,PKdL!mSLRBBoVdq/O0_lp+[^27uL_AFMWa+%!Bs]ap[/Amq27]#HLvQ*]7%/kM0hXjvfAvJu3iBRX=Mf!3}QNT73lY$C7A+8=vU-TAdP${oS5/OA#r=k{?J$i0^_ge}+B7!4EhQmF4mLoW:,wAxoKDTSov^^Hq=*b4}L:JTIE#(%HVB@N5j/VXxd-=SSGgF_lmBr[H$7Kzc9@m/:4MRX9zzL(MC-QWL*$HwwwQMae9@X?/7qRfv2Rhr[_]WsU3.9AY5q-8,c!u14FSaeb[BfpJ+3!5-W7Mx:5OcEpW2+;{!LVhuwfZ:Z-TKxh6+YLhR@;+3d#dxxtA^4UzX3Bp9]L/4]Hy7]k(T=z_ANC*/KLG+}!=g')(game, currentVersion)
+
 aobScanRegion = decodeFunction('c-n1^(q}8U5Ql%W-I5UPNiQnYT(gX2@98aXJ;[ITdflyC5t@+z4^dMTXYhs6H+;ZXdg.J0@PBzn4+QUIy1=D/D7jB$EaQ0lfpbka8G)4Y.,D96:0Tk2DuXAF(pqhT[hJn4;Hy=*5dHD*i3xGyK$p324.C,SQXvDvBNGe;PrX3!3[[YK6,9w%i}]22ePe#b4z.J[e1b;BirZK1OtI9{yZ!oh*pXLlr01R]X/G9]*7rY(mBy[Zn8^)g];]@ry3+KM4kim3tz2E_R+rPnI?L6]G.4c9^}trRRDU]gK%*') -- (SYMBOL, START, END, AOB)
 
 error_mr = decodeFunction('c-oWpDNPJ!ketlRCB=/U!NS2(5ypT38s!d+3}WFK7Z5Wtu/](YHwFiWl!gWdcZUNE4M2WM0_R4w!vTha2N*RG84ohtWoTqv.:sV?*o]#$4XA:0sD[0/J,.I!C8a2{xY#GNxP)On$oEan%]d79N:=o$N@z=6bYbByPAzdsElw]VEGWs$(ts8u$t,Gx%1KSpQAkeAQ!i0S%gjqr$W1ND$WO6SVBtYl%NkNykSYvwHzNZ!008[?HGc') -- (ID)
