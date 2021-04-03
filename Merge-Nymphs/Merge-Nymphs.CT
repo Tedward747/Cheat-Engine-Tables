@@ -239,6 +239,8 @@ local DisableCameraLimits_CodeEnable = [[
 ]]
 
 local DisableCameraLimits_CodeDisable = [[
+  DisableCameraLimits:
+    db F3 0F 10 45 F4
   unregistersymbol(DisableCameraLimits_Enable)
   unregistersymbol(DisableCameraLimits_Data)
   unregistersymbol(DisableCameraLimits_Code)
