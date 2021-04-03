@@ -204,6 +204,48 @@ local CheckIfCanMerge_CodeDisable = [[
   unregistersymbol(CheckIfCanMerge3)
 ]]
 
+local DisableCameraLimits_CodeEnable = [[
+  label(DisableCameraLimits_Return)
+  label(DisableCameraLimits_Enable)
+  label(DisableCameraLimits_Data)
+  label(DisableCameraLimits_Code)
+  registersymbol(DisableCameraLimits_Enable)
+  registersymbol(DisableCameraLimits_Data)
+  registersymbol(DisableCameraLimits_Code)
+
+  label(DisableCameraLimits2)
+  %s:
+  DisableCameraLimits2:
+  registersymbol(DisableCameraLimits2)
+
+  QOL+2C:
+  DisableCameraLimits_Enable:
+    dw 00
+    db CC CC CC
+  DisableCameraLimits_Data:
+    dd (float)4000
+    db CC CC CC
+  DisableCameraLimits_Code:
+    cmp byte ptr [DisableCameraLimits_Enable],0x1
+    movss xmm0,[DisableCameraLimits_Data]
+    db 74 05
+    movss xmm0,[ebp-0C]
+    jmp DisableCameraLimits_Return
+    db CC CC CC
+
+    DisableCameraLimits:
+      jmp DisableCameraLimits_Code
+    DisableCameraLimits_Return:
+]]
+
+local DisableCameraLimits_CodeDisable = [[
+  unregistersymbol(DisableCameraLimits_Enable)
+  unregistersymbol(DisableCameraLimits_Data)
+  unregistersymbol(DisableCameraLimits_Code)
+  unregistersymbol(DisableCameraLimits)
+  unregistersymbol(DisableCameraLimits2)
+]]
+
 [ENABLE]
 if LaunchMonoDataCollector() ~= 0 then
   local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_3', '&lt;RandomAction&gt;b__4'))
@@ -235,6 +277,21 @@ if LaunchMonoDataCollector() ~= 0 then
   else
     error_mr(16)
   end
+
+  local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'InputManager', 'CameraZoom'))
+  local addr2 = mono_compile_method(mono_findMethod('Assembly-CSharp', 'MapManager', 'ClampIfOutOffMap'))
+  if (addr ~= nil and addr2 ~= nil) then
+    local scan = aobScanRegion('DisableCameraLimits',addr,addr+1024,'F3 0F 10 45 F4 F3 0F 11 04 24 E8')
+    if scan ~= nil then
+      addr2 = ('%X'):format(addr2)
+      DisableCameraLimits_CodeEnable = DisableCameraLimits_CodeEnable:format(addr2)
+      if not autoAssemble(DisableCameraLimits_CodeEnable) then error_mr(49) end
+    else
+      error_mr(49)
+    end
+  else
+    error_mr(49)
+  end
 end
 
 [DISABLE]
@@ -244,6 +301,10 @@ end
 
 if getAddressSafe('CheckIfCanMerge') then
   autoAssemble(CheckIfCanMerge_CodeDisable)
+end
+
+if getAddressSafe('DisableCameraLimits') then
+  autoAssemble(DisableCameraLimits_CodeDisable)
 end
 </AssemblerScript>
           <CheatEntries>
@@ -303,6 +364,23 @@ IdleNymphsGoHome_Enable:
 [DISABLE]
 IdleNymphsGoHome_Enable:
   db 0
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>49</ID>
+              <Description>"Disable Camera Move/Zoom Limits"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+DisableCameraLimits_Enable:
+  db 1
+DisableCameraLimits2:
+  db B0 01 C3
+[DISABLE]
+DisableCameraLimits_Enable:
+  db 0
+DisableCameraLimits2:
+  db 55 8B EC
 </AssemblerScript>
             </CheatEntry>
           </CheatEntries>
