@@ -47,3 +47,4 @@ Options:
 	  * No Cost To Open Locked Chests/Golems/Event Chest: Should work for any camp item you click and it asks for coins, bricks or rubies to open
 	  * Merge N Gives N: Instead of merging 3 to get 1 or 5 to get 2, 3 gives 3, 5 gives 5, 32 gives 32 etc. Works for manually merging on map, and through Nymph book.
 	  * Healing Pheremones Ignore Dead Land: Healing Pheremones and Flower Beds don't try to heal any dead land (the tiles you need to merge to heal). If there are no healable tiles, the extra goes towards your points as if there were no dead land tiles.
+  * Bypass Maintenance Mode: Disables the 'game is down for maintenance' message. Note when I made this the maintenance window ended before I could test it, so while it ought to work I have no idea what exactly will happen. Test at your own risk.

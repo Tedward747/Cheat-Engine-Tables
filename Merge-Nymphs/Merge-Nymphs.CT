@@ -56,6 +56,7 @@ Options:
       * No Cost To Open Locked Chests/Golems/Event Chest: Should work for any camp item you click and it asks for coins, bricks or rubies to open
 	  * Merge N Gives N: Instead of merging 3 to get 1 or 5 to get 2, 3 gives 3, 5 gives 5, 32 gives 32 etc. Works for manually merging on map, and through Nymph book.
       * Healing Pheremones Ignore Dead Land: Healing Pheremones and Flower Beds don't try to heal any dead land (the tiles you need to merge to heal). If there are no healable tiles, the extra goes towards your points as if there were no dead land tiles.
+  * Bypass Maintenance Mode: Disables the 'game is down for maintenance' message. Note when I made this the maintenance window ended before I could test it, so while it ought to work I have no idea what exactly will happen. Test at your own risk.
 }
 [ENABLE]
 [DISABLE]
@@ -1170,6 +1171,101 @@ HealingIgnoreDeadLand3+02:
           </CheatEntries>
         </CheatEntry>
       </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>50</ID>
+      <Description>"Bypass Maintenance Mode [Enable this, then launch the game]"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+{$lua}
+if syntaxcheck then return end
+function agressive_connect()
+  print('try connect')
+  if (process == nil or readInteger(process) == nil or process ~= "Merge Nymphs.exe") then
+    if openProcess("Merge Nymphs.exe") == nil then
+      local timer = createTimer(getMainForm())
+      timer.Interval = 250
+      timer.OnTimer = function(timer)
+        agressive_connect()
+        timer.destroy()
+      end
+    else
+      local timer = createTimer(getMainForm())
+      timer.Interval = 500
+      timer.OnTimer = function(timer)
+        print('start usemono')
+        monoAA_USEMONO(process,false)
+        print('start wait')
+        waitForPDB()
+        print('start collector')
+        LaunchMonoDataCollector()
+        print('start assert')
+        agressive_assert()
+        timer.destroy()
+      end
+    end
+  end
+end
+
+function agressive_assert()
+  print('try assert')
+  local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'UpgradeChecker', 'LoadConfig'))
+  if addr == nil then
+    if UpgradeChecker_Count &lt;= 20 then
+      UpgradeChecker_Count = UpgradeChecker_Count + 1
+      local timer = createTimer(getMainForm())
+      timer.Interval = 100
+      timer.OnTimer = function(timer)
+        agressive_assert()
+        timer.destroy()
+      end
+    else
+      print('Too many tries, giving up')
+    end
+  else
+    addr = ('%X'):format(addr+12)
+    print('Got it, enabling bypass ' .. addr)
+    local UpgradeChecker_Enable = [[
+      alloc(UpgradeChecker_Code,$16)
+
+      label(UpgradeChecker_Return)
+
+      UpgradeChecker_Code:
+        mov edi,[ebp+08]
+        mov byte ptr [edi+0D],01
+        mov byte ptr [edi+21],01
+        jmp UpgradeChecker_Return
+
+
+      label(UpgradeCheck)
+      %s:
+      UpgradeCheck:
+        jmp UpgradeChecker_Code
+        nop 2
+      UpgradeChecker_Return:
+      registersymbol(UpgradeCheck)
+    ]]
+    UpgradeChecker_Enable = UpgradeChecker_Enable:format(addr)
+    autoAssemble(UpgradeChecker_Enable)
+  end
+end
+
+local UpgradeChecker_Count = 0
+
+print('start connect')
+agressive_connect()
+
+{$asm}
+
+[DISABLE]
+
+UpgradeCheck:
+  db 8B 7D 08 C6 47 0D 01
+
+unregistersymbol(UpgradeCheck)
+dealloc(UpgradeChecker_Code)
+</AssemblerScript>
     </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols/>
