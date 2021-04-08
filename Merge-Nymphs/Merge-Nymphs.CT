@@ -1070,10 +1070,25 @@ end
                   <LastState/>
                   <VariableType>Auto Assembler Script</VariableType>
                   <AssemblerScript>[ENABLE]
-aobscanmodule(BuffsToMax,GameAssembly.dll,FF 75 EC FF 75 E8 56 E8 96)
-BuffsToMax:
-  db 6A 08 90
-registersymbol(BuffsToMax)
+{$lua}
+if syntaxcheck then return end
+if monopipe then monopipe.destroy();monopipe=nil end
+if LaunchMonoDataCollector() ~= 0 then
+  local addr = getAddressSafe('BuffStarter.Open')
+  if addr == nil then
+    addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'BuffStarter', 'Open'))
+  end
+  if addr == nil then return false end --error
+
+  local scan = aobScanRegion('BuffsToMax',addr,addr+1024,'FF 75 EC FF 75 E8 56 E8')
+  if scan == nil then return false end --error
+
+  autoAssemble([[
+    BuffsToMax:
+      db 6A 08 90
+  ]])
+end
+{$asm}
 [DISABLE]
 BuffsToMax:
   db FF 75 EC
