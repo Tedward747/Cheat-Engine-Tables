@@ -505,23 +505,42 @@ dealloc(mem_AlchemistItemsGiven)
                   <LastState/>
                   <VariableType>Auto Assembler Script</VariableType>
                   <AssemblerScript>[ENABLE]
-aobscanmodule(AlchemistReset,GameAssembly.dll,85 E4 FF 83 C4 04 F2 0F 10 05 60 CA D5 7A)
-alloc(AlchemistReset_Mem,$1000)
-label(return)
-AlchemistReset_Mem:
-  movsd xmm0,[AlchemistReset_Num]
-  jmp return
-AlchemistReset_Num:
-dq 0
-AlchemistReset+06:
-  jmp AlchemistReset_Mem
-  nop 3
-return:
-registersymbol(AlchemistReset)
+{$lua}
+if syntaxcheck then return end
+if monopipe then monopipe.destroy();monopipe=nil end
+if LaunchMonoDataCollector() ~= 0 then
+  local addr = getAddressSafe('Alchemist.CustomUpdate')
+  if addr == nil then
+    addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'Alchemist', 'CustomUpdate'))
+  end
+  if addr == nil then return false end --error
+
+  local scan = aobScanRegion('AlchemistReset',addr,addr+256,'F2 0F 10 05')
+  if scan == nil then return false end --error
+
+  autoAssemble([[
+    alloc(AlchemistReset_Mem,$1000)
+    label(return)
+    AlchemistReset_Mem:
+      movsd xmm0,[AlchemistReset_Num]
+      jmp return
+    AlchemistReset_Num:
+      dq 0
+    AlchemistReset_Data:
+      readMem(AlchemistReset,8)
+    AlchemistReset:
+      jmp AlchemistReset_Mem
+      nop 3
+    return:
+    registersymbol(AlchemistReset_Data)
+  ]])
+end
+{$asm}
 [DISABLE]
-AlchemistReset+06:
-  db F2 0F 10 05 60 CA D5 7A
+AlchemistReset:
+  readMem(AlchemistReset_Data,8)
 unregistersymbol(AlchemistReset)
+unregistersymbol(AlchemistReset_Data)
 dealloc(AlchemistReset_Mem)
 </AssemblerScript>
                 </CheatEntry>
