@@ -692,7 +692,7 @@ DropSpawner:
 return:
 registersymbol(DropSpawner)
 [DISABLE]
-INJECT:
+DropSpawner:
   db 6A 00 FF 76 1C FF 76 18
 unregistersymbol(DropSpawner)
 dealloc(DropSpawner_Mem)
