@@ -1047,7 +1047,7 @@ local HealingIgnoreDeadLand_CodeDisable = [[
 if LaunchMonoDataCollector() ~= 0 then
   local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'FlyingPheromone', 'Spawn'))
   if addr ~= nil then
-    local scan = aobScanRegion('HealingIgnoreDeadLand',addr,addr+1024,'6A 00 6A 01 6A 01 56 53')
+    local scan = aobScanRegion('HealingIgnoreDeadLand',addr,addr+1024,'6A 00 6A 01 6A 01')
     local scan2 = aobScanRegion('HealingIgnoreDeadLand2',addr,addr+1024,'6A 00 FF 75 18 83 C0 05 6A 01')
     local scan3 = aobScanRegion('HealingIgnoreDeadLand3',addr,addr+1024,'6A 00 FF 75 18 83 C0 05 6A 00')
     if scan == nil or scan2 == nil or scan3 == nil then
