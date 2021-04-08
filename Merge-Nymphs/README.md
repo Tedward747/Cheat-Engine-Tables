@@ -12,6 +12,7 @@ Options:
     * Disable Idle Check: Normally the game will pause if you're idle for too long, this disables that so you can leave the game running
     * Nymph Book: Require 5 Shells To Show Exclamation Mark: Annoying having the exclamation mark when you can merge 3 when you only want to merge 5. Enable then do something to refresh the book, i.e. enter camp or open &amp; close the book.
     * Idle Nymphs Stay Off Map: In camp, any Nymphs that aren't actively harvesting/attacking go to the bottom left corner so they aren't in the way.
+	* Disable Camera Move/Zoom Limits: Zoom out or scroll around to your hearts content
   * Cheats:
     * Alchemist:
       * 100% Bonus Item Chance: When you complete a trade, you have a 100% chance to get the bonus item. Doesn't reflect in the UI but it works.
