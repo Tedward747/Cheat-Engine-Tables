@@ -82,6 +82,37 @@ error_mr = decodeFunction('c-oWpDNPJ!ketlRCB=/U!NS2(5ypT38s!d+3}WFK7Z5Wtu/](YHwF
 
 mono_findMethodByArgCount = decodeFunction('c-n1H%Syvg5IvLJJP/^(3#rPj6e*@,fXjPRaHT83jc5oqtpSrtld8K.;Y@*GeuUyzL/PUXr9a[Hua*A*fng5k3{,sz]?]rE[4_dnl^w*H-?iG,Uu/40!n@?ZlLAY-ri4)Cia10CS.16AQh@)(NHSOupf%7UCbv^Z1),BcB}#O2S?_4R%96[GJ/;+l*hR*xCcG0^6c8S?%adSiO}%?3FdV5IE=/DR7Y)mHwmds/KgOUnn.qljN=7c,19-QAs_.7ZTG,5ll4kT;pq.HY?MM3D8kO-fJI+^;Ht2yqNBSA*5}u}9o)oY,va9GK;8xKygD8!Qc#w/5w4e3EZjyD^7g3)qW=vG@Q^n7}4C8E:9;m3YzmwN!+5G8uL*52j:}N7RadDXRvZxpiV(VOg!pn/6lJ$hwOQYiKT*4-lJ15)O_Kb}[cVV.') -- (namespace, classname, methodname, arguments)
 
+function mono_findClassByFullName(namespace, shortname, fullname)
+  local assemblies = mono_enumAssemblies()
+  local cs=0
+  if assemblies then
+    for i=1,#assemblies do
+      local image = mono_getImageFromAssembly(assemblies[i])
+      if image and (image~=0) then
+        local imagename = mono_image_get_name(image)
+        if imagename and imagename == namespace then
+          cs = image
+          break
+        end
+      end
+    end
+  end
+  if cs == 0 then return nil end
+  local classes =  mono_image_enumClasses(cs)
+  if classes and (classes~=0) then
+    for i=1,#classes do
+      if classes[i].classname == shortname then
+        local class = mono_class_getFullName(classes[i].class)
+        if class == fullname then
+          return classes[i].class
+        end
+        --print('class# ' .. classes[i].class .. ' short name ' .. classes[i].classname .. ' namespace? ' .. classes[i].namespace .. ' fqn ' .. class)
+      end
+    end
+  end
+  return nil
+end
+
 [ENABLE]
 if (process == nil or readInteger(process) == nil or process ~= "Merge Nymphs.exe") then
   openProcess("Merge Nymphs.exe")
