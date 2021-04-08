@@ -286,6 +286,7 @@ local DisableCameraLimits_CodeDisable = [[
 ]]
 
 [ENABLE]
+if monopipe then monopipe.destroy();monopipe=nil end
 if LaunchMonoDataCollector() ~= 0 then
   local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_3', '&lt;RandomAction&gt;b__4'))
   local addr2 = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass55_6', '&lt;RandomAction&gt;b__7'))
@@ -305,7 +306,11 @@ if LaunchMonoDataCollector() ~= 0 then
 
   local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'NymphBookCampButton', 'CheckIfCanMerge'))
   local addr2 = mono_compile_method(mono_findMethodByArgCount('Assembly-CSharp', 'NymphBook', 'Show', 0))
-  local addr3 = mono_compile_method(mono_findMethod('Assembly-CSharp', '&lt;&gt;c__DisplayClass98_0', '&lt;BuyShell&gt;b__0'))
+  local addr3 = getAddressSafe('&lt;&gt;c__DisplayClass98_0.&lt;BuyShell&gt;b__0')
+  if addr3 == nil then
+    local class = mono_findClassByFullName('Assembly-CSharp.dll', '&lt;&gt;c__DisplayClass98_0', 'NymphBook.&lt;&gt;c__DisplayClass98_0')
+    addr3 = mono_compile_method(mono_class_findMethod(class, '&lt;BuyShell&gt;b__0'))
+  end
   if (addr ~= nil and addr2 ~= nil and addr3 ~= nil) then
     local scan = aobScanRegion('CheckIfCanMerge',addr,addr+512,'83 C4 08 83 F8 02 0F 8E')
     local scan2 = aobScanRegion('CheckIfCanMerge2',addr2,addr2+2048,'83 C4 08 83 F8 02 0F 8E')
