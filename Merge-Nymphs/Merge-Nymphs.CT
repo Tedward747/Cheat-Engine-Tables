@@ -644,7 +644,7 @@ if LaunchMonoDataCollector() ~= 0 then
     mono_compile_method(mono_findMethod('Assembly-CSharp', 'ActiveSpawner', 'CustomUpdate'))
 end
 {$asm}
-aobScanRegion(ActiveSpawnerConstaSpawn,ActiveSpawner.CustomUpdate,ActiveSpawner.CustomUpdate+512,83 C4 14 84 C0 0F 84 ?? ?? ?? ?? A1 ?? ?? ?? ?? 8B 7E 28)
+aobScanRegion(ActiveSpawnerConstaSpawn,ActiveSpawner.CustomUpdate,ActiveSpawner.CustomUpdate+512,83 C4 14 84 C0 0F 84 ?? ?? ?? ?? A1 ?? ?? ?? ?? 8B)
 alloc(ActiveSpawnerConstaSpawn_Bytes,6)
 ActiveSpawnerConstaSpawn_Bytes:
   readmem(ActiveSpawnerConstaSpawn+05,6)
