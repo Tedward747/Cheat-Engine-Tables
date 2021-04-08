@@ -788,7 +788,7 @@ unregisterSymbol(ShopPricesZero)
                   <LastState/>
                   <VariableType>Auto Assembler Script</VariableType>
                   <AssemblerScript>[ENABLE]
-aobscanmodule(VaultChests,GameAssembly.dll,8B 75 08 80 7E 21 00 0F 85)
+aobscanmodule(VaultChests,GameAssembly.dll,8B ?? 08 80 ?? 21 00 0F 85)
 VaultChests+06:
   db 01
 registersymbol(VaultChests)
