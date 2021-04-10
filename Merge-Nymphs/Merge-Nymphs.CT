@@ -49,6 +49,7 @@ Options:
 	* Challenge Levels:
 	  * Double Bonus Rewards Cost 0 Gems: Pretty straight forward, enable before starting (or resuming) a challenge level.
 	  * Disable Timer: Pretty straight forward, enable before starting (or resuming) a challenge level.
+      * Set Minimum Nymph Level From Portals: Enable and a sub-item will appear, wait for the Value to change from '??' to '1', then double click the value to change.
     * Dating Sim:
       * No Energy Cost: Starting a new chat doesn't reduce available energy.
       * Give Items Doesn't Require Items: After chatting when the Nymph wants items, this sets your available amount to what she's looking for, and clicking 'Give' doesn't actually take any items.
@@ -948,6 +949,67 @@ ChallengeTimer:
 unregistersymbol(ChallengeTimer)
 
 </AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>52</ID>
+                  <Description>"Set Minimum Nymph Level From Portals"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>{$lua}
+if syntaxcheck then return end
+local NymphPortalLevel_CodeEnable = [[
+  NymphPortalLevel+2:
+    db BC
+]]
+
+local NymphPortalLevel_CodeDisable = [[
+  NymphPortalLevel+2:
+    db C8 00 00 00 00
+  unregistersymbol(NymphPortalLevel)
+]]
+
+[ENABLE]
+if LaunchMonoDataCollector() ~= 0 then
+  local addr = mono_compile_method(mono_findMethod('Assembly-CSharp', 'NymphPortal', 'Init'))
+  if addr ~= nil then
+    local scan = aobScanRegion('NymphPortalLevel',addr,addr+2048,'83 BF C8 00 00 00 00')
+    if scan ~= nil then
+      if not autoAssemble(NymphPortalLevel_CodeEnable) then error_mr(52) end
+    else
+      error_mr(52)
+    end
+  else
+    error_mr(52)
+  end
+end
+ 
+ 
+[DISABLE]
+if getAddressSafe('NymphPortalLevel') then
+  autoAssemble(NymphPortalLevel_CodeDisable)
+end
+</AssemblerScript>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>53</ID>
+                      <Description>"Double click Value to change"</Description>
+                      <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">00:1
+01:2
+02:3
+03:4
+04:5
+05:6
+06:7
+07:8
+</DropDownList>
+                      <LastState Value="00" RealAddress="7AA27C71"/>
+                      <ShowAsHex>1</ShowAsHex>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Byte</VariableType>
+                      <Address>NymphPortalLevel+6</Address>
+                    </CheatEntry>
+                  </CheatEntries>
                 </CheatEntry>
               </CheatEntries>
             </CheatEntry>

@@ -40,6 +40,7 @@ Options:
 	* Challenge Levels:
 	  * Double Bonus Rewards Cost 0 Gems: Pretty straight forward, enable before starting (or resuming) a challenge level.
 	  * Disable Timer: Pretty straight forward, enable before starting (or resuming) a challenge level.
+	  * Set Minimum Nymph Level From Portals: Enable and a sub-item will appear, wait for the Value to change from '??' to '1', then double click the value to change.
     * Dating Sim:
       * No Energy Cost: Starting a new chat doesn't reduce available energy.
       * Give Items Doesn't Require Items: After chatting when the Nymph wants items, this sets your available amount to what she's looking for, and clicking 'Give' doesn't actually take any items.
