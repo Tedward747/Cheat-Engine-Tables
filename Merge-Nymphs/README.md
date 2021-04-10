@@ -14,6 +14,7 @@ Options:
     * Idle Nymphs Stay Off Map: In camp, any Nymphs that aren't actively harvesting/attacking go to the bottom left corner so they aren't in the way.
 	* Healing Pheremones Ignore Dead Land: Healing Pheremones and Flower Beds don't try to heal any dead land (the tiles you need to merge to heal). If there are no healable tiles, the extra goes towards your points as if there were no dead land tiles.
 	* Disable Camera Move/Zoom Limits: Zoom out or scroll around to your hearts content
+    * Enable Ability To Delete Nymphs: Enable then select a Nymph, trash icon should be on the bottom info bar like normal items
   * Cheats:
     * Alchemist:
       * 100% Bonus Item Chance: When you complete a trade, you have a 100% chance to get the bonus item. Doesn't reflect in the UI but it works.

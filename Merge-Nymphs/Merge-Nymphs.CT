@@ -23,6 +23,7 @@ Options:
     * Idle Nymphs Stay Off Map: In camp, any Nymphs that aren't actively harvesting/attacking go to the bottom left corner so they aren't in the way.
     * Healing Pheremones Ignore Dead Land: Healing Pheremones and Flower Beds don't try to heal any dead land (the tiles you need to merge to heal). If there are no healable tiles, the extra goes towards your points as if there were no dead land tiles.
     * Disable Camera Move/Zoom Limits: Zoom out or scroll around to your hearts content
+    * Enable Ability To Delete Nymphs: Enable then select a Nymph, trash icon should be on the bottom info bar like normal items
   * Cheats:
     * Alchemist:
       * 100% Bonus Item Chance: When you complete a trade, you have a 100% chance to get the bonus item. Doesn't reflect in the UI but it works.
@@ -469,6 +470,53 @@ DisableCameraLimits_Enable:
   db 0
 DisableCameraLimits2:
   db 55 8B EC
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>51</ID>
+              <Description>"Enable Ability To Delete Nymphs"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$lua}
+if syntaxcheck then return end
+if monopipe then monopipe.destroy();monopipe=nil end
+LaunchMonoDataCollector()
+
+function HIAH(n,o) --Hex(n)-&gt;Int-&gt;Add(o)-&gt;Hex
+  return string.format('%x',tonumber('0x'..n)+o)
+end
+
+function is_between(num, lower, upper)
+  if num &gt; lower and num &lt; upper then return 1 end
+  return nil
+end
+
+function delete_nymphs_toggle(val)
+  local ms=createMemScan()
+  local vtable = mono_findClass('Assembly-CSharp', 'MapObjectType')
+
+  ms.firstScan(soExactValue,vtDword,rtRounded,string.format('%x',vtable),'', 0,0x7ffffffffffffffff, '', fsmAligned, "8",true,true,false,false)
+  ms.waitTillDone()
+  local fl=createFoundList(ms)
+  fl.initialize()
+
+  local i
+  for i=0,fl.Count-1 do
+                       --w                                   --nymphPower                                    --level                                                             --key-&gt;value
+    if readInteger(HIAH(fl[i],140)) == 0 and readInteger(HIAH(fl[i],200)) &gt; 0 and is_between(readInteger(HIAH(fl[i],188)),0,9) and readString(string.format('%x',readInteger(HIAH(fl[i],12))+12),10,true) == 'nymph' then
+                       --sellable
+      writeInteger(HIAH(fl[i],148),val)
+    end
+  end
+
+  fl.destroy()
+  ms.destroy()
+end
+
+[ENABLE]
+delete_nymphs_toggle(1)
+[DISABLE]
+delete_nymphs_toggle(0)
 </AssemblerScript>
             </CheatEntry>
           </CheatEntries>
